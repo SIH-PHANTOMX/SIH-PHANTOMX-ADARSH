@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realm - Alumni Management Platform</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Professional Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Modern Color Palette */
+        :root {
+            --primary-dark: #13293D;
+            --primary-blue: #006494;
+            --accent-blue: #247BA0;
+            --bright-blue: #1B98E0;
+            --light-bg: #E8F1F2;
+
+            --white: #FFFFFF;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E1;
+            --gray-400: #94A3B8;
+            --gray-500: #64748B;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1E293B;
+            --gray-900: #0F172A;
+
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-blue) 50%, var(--accent-blue) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-700);
+            line-height: 1.5;
+        }
+
+        /* Main Container - Fixed height */
+        .login-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 95vw;
+            max-width: 900px;
+            height: 90vh;
+            max-height: 550px;
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* Left Panel */
+        .left-panel {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent-blue) 100%);
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .brand-section {
+            z-index: 2;
+            margin-bottom: 25px;
+        }
+
+        .realm-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .realm-first {
+            color: #1B98E0;
+        }
+
+        .realm-second {
+            color: #E8F1F2;
+        }
+
+        .tagline {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            font-weight: 300;
+        }
+
+        .features-preview {
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .feature-highlight {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.8rem;
+            padding: 8px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: var(--transition);
+        }
+
+        .feature-highlight:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(2px);
+        }
+
+        .feature-icon {
+            font-size: 0.9rem;
+            width: 16px;
+            text-align: center;
+            color: var(--bright-blue);
+            flex-shrink: 0;
+        }
+
+        /* Right Panel - Proper scrolling */
+        .right-panel {
+            background: var(--gray-50);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 350px;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--gray-200);
+            margin: auto 0;
+            min-height: fit-content;
+        }
+
+        /* Form Containers */
+        .form-container {
+            display: block;
+        }
+
+        .form-container.hidden {
+            display: none;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .form-header h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+
+        .form-header p {
+            color: var(--gray-600);
+            font-size: 0.8rem;
+        }
+
+        /* Form Styles */
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .name-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 10px;
+            color: var(--gray-400);
+            font-size: 0.8rem;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 9px 10px 9px 32px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            background: var(--white);
+            color: var(--gray-700);
+            transition: var(--transition);
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(36, 123, 160, 0.1);
+        }
+
+        .input-group input::placeholder {
+            color: var(--gray-400);
+            font-size: 0.85rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray-400);
+            cursor: pointer;
+            padding: 4px;
+            z-index: 10;
+            transition: var(--transition);
+        }
+
+        .password-toggle:hover {
+            color: var(--gray-600);
+        }
+
+        .password-toggle i {
+            font-size: 0.8rem;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.7rem;
+            margin-top: 2px;
+            display: none;
+            line-height: 1.2;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2px 0 6px 0;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: var(--gray-600);
+        }
+
+        .remember-me input {
+            margin-right: 5px;
+            accent-color: var(--accent-blue);
+            width: 12px;
+            height: 12px;
+        }
+
+        .forgot-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .forgot-link:hover {
+            color: var(--bright-blue);
+            text-decoration: underline;
+        }
+
+        /* Role Selection */
+        .role-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .role-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .role-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .role-card {
+            cursor: pointer;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: 10px;
+            background: var(--white);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .role-card:hover {
+            border-color: var(--accent-blue);
+            background: var(--gray-50);
+        }
+
+        .role-card input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            top: 8px;
+            right: 8px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .role-card input[type="radio"]:checked+.role-content {
+            color: var(--accent-blue);
+        }
+
+        .role-card input[type="radio"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-blue);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+        }
+
+        .role-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            padding-right: 20px;
+        }
+
+        .role-icon {
+            font-size: 1rem;
+            color: var(--gray-400);
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .role-card input[type="radio"]:checked~.role-content .role-icon {
+            color: var(--accent-blue);
+        }
+
+        .role-text {
+            flex: 1;
+        }
+
+        .role-text h4 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 1px;
+        }
+
+        .role-text span {
+            font-size: 0.7rem;
+            color: var(--gray-500);
+            line-height: 1.2;
+        }
+
+        /* Buttons */
+        .primary-btn,
+        .secondary-btn {
+            width: 100%;
+            padding: 9px 16px;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            position: relative;
+            min-height: 36px;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--bright-blue) 100%);
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .primary-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .primary-btn:active {
+            transform: translateY(0);
+        }
+
+        .primary-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .secondary-btn {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-200);
+        }
+
+        .secondary-btn:hover {
+            background: var(--gray-200);
+            border-color: var(--gray-300);
+        }
+
+        .loading-icon {
+            display: none;
+            font-size: 0.8rem;
+        }
+
+        .primary-btn.loading .btn-text {
+            opacity: 0;
+        }
+
+        .primary-btn.loading .loading-icon {
+            display: block;
+            position: absolute;
+        }
+
+        /* Admin Login Styles */
+        .admin-access-link {
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .admin-link {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .admin-link:hover {
+            color: var(--primary-blue);
+        }
+
+        #adminLoginContainer .input-group {
+            background: var(--gray-50);
+        }
+
+        #adminLoginContainer .input-icon {
+            color: var(--primary-blue);
+        }
+
+        /* Divider - Fixed positioning */
+        .divider {
+            text-align: center;
+            margin: 12px 0 10px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--gray-200);
+            z-index: 1;
+        }
+
+        .divider span {
+            position: relative;
+            background: var(--white);
+            padding: 0 10px;
+            color: var(--gray-500);
+            font-size: 0.75rem;
+            z-index: 2;
+        }
+
+        /* Message Container */
+        .message-container {
+            margin-top: 10px;
+            padding: 8px 10px;
+            border-radius: var(--radius-md);
+            border: 1px solid;
+            background: var(--white);
+            font-size: 0.8rem;
+            line-height: 1.3;
+        }
+
+        .message-container.hidden {
+            display: none;
+        }
+
+        .message-container.success {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.05);
+            color: var(--success);
+        }
+
+        .message-container.error {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.05);
+            color: var(--error);
+        }
+
+        .message-content {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .message-icon {
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        /* Scrollbar Styling */
+        .right-panel::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .right-panel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .right-panel::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 2px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+
+            .login-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+                width: 100vw;
+                height: 100vh;
+                max-height: none;
+                border-radius: 0;
+            }
+
+            .left-panel {
+                padding: 15px;
+                order: 1;
+                min-height: 25vh;
+            }
+
+            .realm-title {
+                font-size: 2rem;
+            }
+
+            .features-preview {
+                display: none;
+            }
+
+            .right-panel {
+                padding: 10px;
+                order: 2;
+                overflow-y: auto;
+            }
+
+            .auth-card {
+                padding: 15px;
+                margin: 0;
+            }
+
+            .name-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .realm-title {
+                font-size: 1.8rem;
+                letter-spacing: 0.1em;
+            }
+
+            .auth-card {
+                padding: 12px;
+            }
+
+            .form-header h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Focus Styles */
+        *:focus-visible {
+            outline: 2px solid var(--accent-blue);
+            outline-offset: 1px;
+        }
+
+        /* Prevent text selection on interactive elements */
+        .role-card,
+        .primary-btn,
+        .secondary-btn,
+        .password-toggle {
+            user-select: none;
+        }
+
+        /* Add to your existing CSS */
+        .otp-timer {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--gray-600);
+            margin: 8px 0;
+        }
+
+        .resend-link {
+            display: block;
+            text-align: center;
+            color: var(--accent-blue);
+            font-size: 0.8rem;
+            text-decoration: none;
+            margin-bottom: 15px;
+            border: none;
+            background: none;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .resend-link:disabled {
+            color: var(--gray-400);
+            cursor: not-allowed;
+        }
+
+        #otpInput {
+            letter-spacing: 4px;
+            font-weight: 600;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <div class="brand-section">
+                <h1 class="realm-title">
+                    <span class="realm-first">REA</span><span class="realm-second">LM</span>
+                </h1>
+                <p class="tagline">Alumni-Student Connection Platform</p>
+            </div>
+
+            <div class="features-preview">
+                <div class="feature-highlight">
+                    <i class="fas fa-users-line feature-icon"></i>
+                    <span>Connect with Industry Leaders</span>
+                </div>
+                <div class="feature-highlight">
+                    <i class="fas fa-calendar-check feature-icon"></i>
+                    <span>Schedule Mentorship Sessions</span>
+                </div>
+                <div class="feature-highlight">
+                    <i class="fas fa-network-wired feature-icon"></i>
+                    <span>Build Professional Networks</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <div class="auth-card">
+                <!-- Admin Login Form -->
+                <div class="form-container hidden" id="adminLoginContainer">
+                    <div class="form-header">
+                        <h2>Administrator Access</h2>
+                        <p>Secure login for system administrators</p>
+                    </div>
+
+                    <form id="adminLoginForm" class="auth-form">
+                        <div class="input-wrapper">
+                            <div class="input-group">
+                                <i class="fas fa-user-shield input-icon"></i>
+                                <input type="email" id="adminEmail" name="email" placeholder="Admin email" required
+                                    pattern="[a-z0-9._%+-]+@admin\.realm\.com$">
+                            </div>
+                            <div class="error-message" id="adminEmailError"></div>
+                        </div>
+
+                        <div class="input-wrapper">
+                            <div class="input-group">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="adminPassword" name="password" placeholder="Admin password"
+                                    required>
+                                <button type="button" class="password-toggle" id="toggleAdmin">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="error-message" id="adminPasswordError"></div>
+                        </div>
+
+                        <div class="input-wrapper">
+                            <div class="input-group">
+                                <i class="fas fa-key input-icon"></i>
+                                <input type="text" id="adminAccessCode" name="accessCode"
+                                    placeholder="Security access code" required>
+                            </div>
+                            <div class="error-message" id="adminAccessError"></div>
+                        </div>
+
+                        <button type="submit" class="primary-btn" id="adminLoginBtn">
+                            <span class="btn-text">Admin Login</span>
+                            <i class="fas fa-spinner fa-spin loading-icon" id="adminSpinner"></i>
+                        </button>
+
+                        <div class="divider">
+                            <span>Not an administrator?</span>
+                        </div>
+
+                        <button type="button" class="secondary-btn" id="showRegularLoginBtn">
+                            <i class="fas fa-arrow-left"></i>
+                            Return to Login
+                        </button>
+                    </form>
+                </div>
+                <!-- Add after adminLoginContainer -->
+                <div class="form-container hidden" id="forgotPasswordContainer">
+                    <div class="form-header">
+                        <h2>Reset Password</h2>
+                        <p>We'll help you recover your account</p>
+                    </div>
+
+                    <form id="forgotPasswordForm" class="auth-form">
+                        <!-- Step 1: Email Entry -->
+                        <div id="emailStep">
+                            <div class="input-wrapper">
+                                <div class="input-group">
+                                    <i class="fas fa-envelope input-icon"></i>
+                                    <input type="email" id="resetEmail" name="email" placeholder="Enter your email"
+                                        required>
+                                </div>
+                                <div class="error-message" id="resetEmailError"></div>
+                            </div>
+
+                            <button type="submit" class="primary-btn" id="sendOtpBtn">
+                                <span class="btn-text">Send OTP</span>
+                                <i class="fas fa-spinner fa-spin loading-icon" id="otpSpinner"></i>
+                            </button>
+                        </div>
+
+                        <!-- Step 2: OTP Verification -->
+                        <div id="otpStep" class="hidden">
+                            <div class="input-wrapper">
+                                <div class="input-group">
+                                    <i class="fas fa-key input-icon"></i>
+                                    <input type="text" id="otpInput" name="otp" placeholder="Enter 6-digit OTP"
+                                        maxlength="6" pattern="\d{6}" required>
+                                </div>
+                                <div class="error-message" id="otpError"></div>
+                            </div>
+
+                            <div class="otp-timer">Time remaining: <span id="otpTimer">05:00</span></div>
+                            <button type="button" class="resend-link" id="resendOtp" disabled>
+                                Resend OTP
+                            </button>
+
+                            <button type="button" class="primary-btn" id="verifyOtpBtn">
+                                <span class="btn-text">Verify OTP</span>
+                                <i class="fas fa-spinner fa-spin loading-icon" id="verifySpinner"></i>
+                            </button>
+                        </div>
+
+                        <!-- Step 3: New Password -->
+                        <div id="newPasswordStep" class="hidden">
+                            <div class="input-wrapper">
+                                <div class="input-group">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    <input type="password" id="newPassword" name="newPassword"
+                                        placeholder="New password" required>
+                                    <button type="button" class="password-toggle" id="toggleNewPass">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="error-message" id="newPasswordError"></div>
+                            </div>
+
+                            <div class="input-wrapper">
+                                <div class="input-group">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    <input type="password" id="confirmPassword" name="confirmPassword"
+                                        placeholder="Confirm new password" required>
+                                    <button type="button" class="password-toggle" id="toggleConfirmPass">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="error-message" id="confirmPasswordError"></div>
+                            </div>
+
+                            <button type="button" class="primary-btn" id="resetPasswordBtn">
+                                <span class="btn-text">Reset Password</span>
+                                <i class="fas fa-spinner fa-spin loading-icon" id="resetSpinner"></i>
+                            </button>
+                        </div>
+
+                        <div class="divider">
+                            <span>Remember your password?</span>
+                        </div>
+
+                        <button type="button" class="secondary-btn" id="backToLoginBtn">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Login
+                        </button>
+                    </form>
+                </div>
+
+
+                <!-- Regular Login Form -->
+                <div class="form-container" id="loginContainer">
+                    <div class="form-header">
+                        <h2>Welcome Back</h2>
+                        <p>Sign in to continue your journey</p>
+                    </div>
+
+                    <form id="loginForm" class="auth-form">
+                        <div class="input-wrapper">
+                            <div class="input-group">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" id="loginEmail" name="email" placeholder="Email address" required
+                                    autocomplete="email">
+                            </div>
+                            <div class="error-message" id="emailError"></div>
+                        </div>
+
+                        <div class="input-wrapper">
+                            <div class="input-group">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="loginPassword" name="password" placeholder="Password"
+                                    required autocomplete="current-password">
+                                <button type="button" class="password-toggle" id="toggleLogin">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="error-message" id="passwordError"></div>
+                        </div>
+
+                        <div class="form-actions">
+                            <label class="remember-me">
+                                <input type="checkbox" id="rememberMe">
+                                Remember me
+                            </label>
+                            <a href="#" class="forgot-link">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="primary-btn" id="loginBtn">
+                            <span class="btn-text">Sign In</span>
+                            <i class="fas fa-spinner fa-spin loading-icon" id="loginSpinner"></i>
+                        </button>
+
+                        <div class="divider">
+                            <span>New to Realm?</span>
+                        </div>
+
+                        <button type="button" class="secondary-btn" id="showSignupBtn">
+                            <i class="fas fa-user-plus"></i>
+                            Create Account
+                        </button>
+                    </form>
+
+                    <div class="admin-access-link">
+                        <a href="#" id="showAdminLoginBtn" class="admin-link">
+                            <i class="fas fa-shield-alt"></i>
+                            Administrator Access
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Signup Form -->
+                <div class="form-container hidden" id="signupContainer">
+                    <div class="form-header">
+                        <h2>Join Realm</h2>
+                        <p>Start building meaningful connections</p>
+                    </div>
+
+                    <form id="signupForm" class="auth-form">
+                        <div class="name-row">
+                            <div class="input-wrapper">
+                                <div class="input-group">
+                                    <i class="fas fa-user input-icon"></i>
+                                    <input type="text" id="firstName" name="firstName" placeholder="First name"
+                                        required>
+                                </div>
+                                <div class="error-message" id="firstNameError"></div>
+                            </div>
+                            <div class="input-wrapper">
+                                <div class="input-group">
+                                    <i class="fas fa-user input-icon"></i>
+                                    <input type="text" id="lastName" name="lastName" placeholder="Last name" required>
+                                </div>
+                                <div class="error-message" id="lastNameError"></div>
+                            </div>
+                        </div>
+
+                        <div class="input-wrapper">
+                            <div class="input-group">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" id="signupEmail" name="email" placeholder="Email address" required>
+                            </div>
+                            <div class="error-message" id="signupEmailError"></div>
+                        </div>
+
+                        <div class="input-wrapper">
+                            <div class="input-group">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="signupPassword" name="password" placeholder="Create password"
+                                    required>
+                                <button type="button" class="password-toggle" id="toggleSignup">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="error-message" id="signupPasswordError"></div>
+                        </div>
+
+                        <div class="role-selection">
+                            <p class="role-label">I am joining as:</p>
+                            <div class="role-cards">
+                                <label class="role-card">
+                                    <input type="radio" name="role" value="student" required>
+                                    <div class="role-content">
+                                        <i class="fas fa-graduation-cap role-icon"></i>
+                                        <div class="role-text">
+                                            <h4>Student</h4>
+                                            <span>Seeking guidance & mentorship</span>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label class="role-card">
+                                    <input type="radio" name="role" value="alumni" required>
+                                    <div class="role-content">
+                                        <i class="fas fa-briefcase role-icon"></i>
+                                        <div class="role-text">
+                                            <h4>Alumni</h4>
+                                            <span>Ready to mentor & share knowledge</span>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="error-message" id="roleError"></div>
+                        </div>
+
+                        <button type="submit" class="primary-btn" id="signupBtn">
+                            <span class="btn-text">Create Account</span>
+                            <i class="fas fa-spinner fa-spin loading-icon" id="signupSpinner"></i>
+                        </button>
+
+                        <div class="divider">
+                            <span>Already have an account?</span>
+                        </div>
+
+                        <button type="button" class="secondary-btn" id="showLoginBtn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Sign In
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Message Display -->
+                <div id="messageContainer" class="message-container hidden">
+                    <div class="message-content">
+                        <i id="messageIcon" class="message-icon"></i>
+                        <span id="messageText"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class RealmAuth {
+            constructor() {
+                this.apiBaseUrl = '/api/auth';
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.setupPasswordToggles();
+            }
+
+            bindEvents() {
+                // Form switching
+                document.getElementById('showSignupBtn')?.addEventListener('click', () => this.showSignup());
+                document.getElementById('showLoginBtn')?.addEventListener('click', () => this.showLogin());
+                document.getElementById('showAdminLoginBtn')?.addEventListener('click', () => this.showAdminLogin());
+                document.getElementById('showRegularLoginBtn')?.addEventListener('click', () => this.showLogin());
+    
+                // Form submissions
+                document.getElementById('loginForm')?.addEventListener('submit', (e) => this.handleLogin(e));
+                document.getElementById('signupForm')?.addEventListener('submit', (e) => this.handleSignup(e));
+                document.getElementById('adminLoginForm')?.addEventListener('submit', (e) => this.handleAdminLogin(e));
+                document.getElementById('forgotPasswordForm')?.addEventListener('submit', (e) => this.handleForgotPassword(e));
+                document.getElementById('verifyOtpBtn')?.addEventListener('click', () => this.verifyOtp());
+                document.getElementById('resetPasswordBtn')?.addEventListener('click', () => this.resetPassword());
+                document.getElementById('resendOtp')?.addEventListener('click', () => this.resendOtp());
+                document.querySelector('.forgot-link')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showForgotPassword();
+                });
+                document.getElementById('backToLoginBtn')?.addEventListener('click', () => this.showLogin());
+    
+                // Real-time validation
+                this.setupValidation();
+    
+                // Check if user is already logged in
+                this.checkExistingAuth();
+            }
+
+            checkExistingAuth() {
+                const token = localStorage.getItem('authToken');
+                const role = localStorage.getItem('userRole');
+
+                if (token && role) {
+                    this.verifyToken(token, role);
+                }
+            }
+
+            async verifyToken(token, role) {
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/verify`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        this.redirectToDashboard(role);
+                    } else {
+                        this.clearAuth();
+                    }
+                } catch (error) {
+                    console.error('Token verification failed:', error);
+                    this.clearAuth();
+                }
+            }
+
+            clearAuth() {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('userId');
+            }
+
+            redirectToDashboard(role) {
+                const dashboardUrls = {
+                    'student': '/realm(std2).html',
+                    'alumni': '/realm(alm3).html',
+                    'admin': '/REALM(ADMIN).html'
+                };
+
+                window.location.href = dashboardUrls[role] || '/dashboard.html';
+            }
+
+            setupPasswordToggles() {
+                const toggleLogin = document.getElementById('toggleLogin');
+                const toggleSignup = document.getElementById('toggleSignup');
+                const toggleAdmin = document.getElementById('toggleAdmin');
+
+                if (toggleLogin) {
+                    toggleLogin.addEventListener('click', () => this.togglePassword('loginPassword', toggleLogin));
+                }
+
+                if (toggleSignup) {
+                    toggleSignup.addEventListener('click', () => this.togglePassword('signupPassword', toggleSignup));
+                }
+
+                if (toggleAdmin) {
+                    toggleAdmin.addEventListener('click', () => this.togglePassword('adminPassword', toggleAdmin));
+                }
+            }
+
+            togglePassword(inputId, button) {
+                const input = document.getElementById(inputId);
+                const icon = button.querySelector('i');
+
+                if (input && icon) {
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.className = 'fas fa-eye-slash';
+                    } else {
+                        input.type = 'password';
+                        icon.className = 'far fa-eye';
+                    }
+                }
+            }
+
+            showSignup() {
+                document.getElementById('loginContainer').classList.add('hidden');
+                document.getElementById('adminLoginContainer').classList.add('hidden');
+                document.getElementById('signupContainer').classList.remove('hidden');
+                this.hideMessage();
+                this.clearErrors();
+            }
+
+            showLogin() {
+                document.getElementById('signupContainer').classList.add('hidden');
+                document.getElementById('adminLoginContainer').classList.add('hidden');
+                document.getElementById('loginContainer').classList.remove('hidden');
+                this.hideMessage();
+                this.clearErrors();
+            }
+
+            showAdminLogin() {
+                document.getElementById('loginContainer').classList.add('hidden');
+                document.getElementById('signupContainer').classList.add('hidden');
+                document.getElementById('adminLoginContainer').classList.remove('hidden');
+                this.hideMessage();
+                this.clearErrors();
+            }
+
+            async handleLogin(e) {
+                e.preventDefault();
+
+                const btn = document.getElementById('loginBtn');
+                const spinner = document.getElementById('loginSpinner');
+
+                try {
+                    this.setLoading(btn, spinner, true);
+                    this.clearErrors();
+
+                    const formData = new FormData(e.target);
+                    const loginData = {
+                        email: formData.get('email').trim().toLowerCase(),
+                        password: formData.get('password'),
+                        rememberMe: formData.get('rememberMe') === 'on'
+                    };
+
+                    if (!this.validateLogin(loginData)) {
+                        return;
+                    }
+
+                    const response = await fetch(`${this.apiBaseUrl}/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(loginData)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        localStorage.setItem('authToken', result.token);
+                        localStorage.setItem('userRole', result.user.role);
+                        localStorage.setItem('userId', result.user.id);
+
+                        if (loginData.rememberMe) {
+                            localStorage.setItem('rememberMe', 'true');
+                        }
+
+                        this.showMessage('Login successful! Redirecting...', 'success', 'fas fa-check-circle');
+
+                        setTimeout(() => {
+                            this.redirectToDashboard(result.user.role);
+                        }, 1500);
+
+                    } else {
+                        let errorMessage = 'Login failed. Please try again.';
+
+                        switch (response.status) {
+                            case 401:
+                                errorMessage = 'Invalid email or password.';
+                                break;
+                            case 403:
+                                errorMessage = 'Account not verified. Please check your email.';
+                                break;
+                            case 429:
+                                errorMessage = 'Too many login attempts. Please try again later.';
+                                break;
+                            default:
+                                errorMessage = result.error || errorMessage;
+                        }
+
+                        this.showMessage(errorMessage, 'error', 'fas fa-exclamation-circle');
+                    }
+
+                } catch (error) {
+                    console.error('Login error:', error);
+                    this.showMessage('Connection error. Please check your internet connection.', 'error', 'fas fa-wifi');
+                } finally {
+                    this.setLoading(btn, spinner, false);
+                }
+            }
+
+            async handleSignup(e) {
+                e.preventDefault();
+
+                const btn = document.getElementById('signupBtn');
+                const spinner = document.getElementById('signupSpinner');
+
+                try {
+                    this.setLoading(btn, spinner, true);
+                    this.clearErrors();
+
+                    const formData = new FormData(e.target);
+                    const signupData = {
+                        firstName: formData.get('firstName').trim(),
+                        lastName: formData.get('lastName').trim(),
+                        email: formData.get('email').trim().toLowerCase(),
+                        password: formData.get('password'),
+                        role: formData.get('role')
+                    };
+
+                    if (!this.validateSignup(signupData)) {
+                        return;
+                    }
+
+                    const response = await fetch(`${this.apiBaseUrl}/signup`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(signupData)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        this.showMessage('Account created successfully! Please check your email to verify your account.', 'success', 'fas fa-envelope-circle-check');
+
+                        setTimeout(() => {
+                            this.showLogin();
+                            document.getElementById('loginEmail').value = signupData.email;
+                            document.getElementById('loginEmail').focus();
+                        }, 3000);
+
+                    } else {
+                        let errorMessage = 'Account creation failed. Please try again.';
+
+                        switch (response.status) {
+                            case 409:
+                                errorMessage = 'An account with this email already exists.';
+                                break;
+                            case 400:
+                                errorMessage = result.error || 'Please check your information and try again.';
+                                break;
+                            default:
+                                errorMessage = result.error || errorMessage;
+                        }
+
+                        this.showMessage(errorMessage, 'error', 'fas fa-exclamation-circle');
+                    }
+
+                } catch (error) {
+                    console.error('Signup error:', error);
+                    this.showMessage('Connection error. Please check your internet connection.', 'error', 'fas fa-wifi');
+                } finally {
+                    this.setLoading(btn, spinner, false);
+                }
+            }
+
+            async handleAdminLogin(e) {
+                e.preventDefault();
+
+                const btn = document.getElementById('adminLoginBtn');
+                const spinner = document.getElementById('adminSpinner');
+
+                try {
+                    this.setLoading(btn, spinner, true);
+                    this.clearErrors();
+
+                    const formData = new FormData(e.target);
+                    const adminData = {
+                        email: formData.get('email').trim().toLowerCase(),
+                        password: formData.get('password'),
+                        accessCode: formData.get('accessCode')
+                    };
+
+                    if (!this.validateAdminLogin(adminData)) {
+                        return;
+                    }
+
+                    if (!this.checkAdminRateLimit(adminData.email)) {
+                        this.showMessage('Too many login attempts. Please try again in 30 minutes.', 'error', 'fas fa-clock');
+                        return;
+                    }
+
+                    const response = await fetch(`${this.apiBaseUrl}/admin/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Admin-Access': adminData.accessCode,
+                            'X-Request-ID': this.generateRequestId(),
+                            'X-Client-Info': this.getClientInfo()
+                        },
+                        body: JSON.stringify({
+                            email: adminData.email,
+                            password: adminData.password
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        this.storeAdminSession(result);
+
+                        this.showMessage('Admin authentication successful! Redirecting...', 'success', 'fas fa-check-circle');
+
+                        setTimeout(() => {
+                            window.location.href = '/REALM(ADMIN).html';
+                        }, 1500);
+                    } else {
+                        throw new Error(result.error || 'Admin authentication failed');
+                    }
+
+                } catch (error) {
+                    console.error('Admin login error:', error);
+                    this.showMessage(error.message, 'error', 'fas fa-shield-alt');
+                    this.logFailedAdminAttempt(adminData.email);
+                } finally {
+                    this.setLoading(btn, spinner, false);
+                }
+            }
+
+            validateLogin(data) {
+                let isValid = true;
+
+                if (!this.isValidEmail(data.email)) {
+                    this.showFieldError('emailError', 'Please enter a valid email address');
+                    isValid = false;
+                }
+
+                if (!data.password || data.password.length < 6) {
+                    this.showFieldError('passwordError', 'Password must be at least 6 characters');
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            validateSignup(data) {
+                let isValid = true;
+
+                if (!data.firstName || data.firstName.length < 2) {
+                    this.showFieldError('firstNameError', 'First name must be at least 2 characters');
+                    isValid = false;
+                }
+
+                if (!data.lastName || data.lastName.length < 2) {
+                    this.showFieldError('lastNameError', 'Last name must be at least 2 characters');
+                    isValid = false;
+                }
+
+                if (!this.isValidEmail(data.email)) {
+                    this.showFieldError('signupEmailError', 'Please enter a valid email address');
+                    isValid = false;
+                }
+
+                if (!this.isValidPassword(data.password)) {
+                    this.showFieldError('signupPasswordError', 'Password must be 8+ characters with letters and numbers');
+                    isValid = false;
+                }
+
+                if (!data.role) {
+                    this.showFieldError('roleError', 'Please select your role');
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            validateAdminLogin(data) {
+                let isValid = true;
+
+                if (!data.email.endsWith('@admin.realm.com')) {
+                    this.showFieldError('adminEmailError', 'Invalid administrator email domain');
+                    isValid = false;
+                }
+
+                if (!data.password || data.password.length < 8) {
+                    this.showFieldError('adminPasswordError', 'Invalid administrator password');
+                    isValid = false;
+                }
+
+                if (!data.accessCode || data.accessCode.length !== 6) {
+                    this.showFieldError('adminAccessError', 'Invalid access code format');
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+
+            isValidPassword(password) {
+                return password.length >= 8 &&
+                    /[a-zA-Z]/.test(password) &&
+                    /\d/.test(password);
+            }
+
+            showFieldError(elementId, message) {
+                const errorElement = document.getElementById(elementId);
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.classList.add('show');
+                }
+            }
+
+            clearErrors() {
+                document.querySelectorAll('.error-message').forEach(element => {
+                    element.classList.remove('show');
+                    element.textContent = '';
+                });
+            }
+
+            setLoading(button, spinner, isLoading) {
+                if (button && spinner) {
+                    if (isLoading) {
+                        button.classList.add('loading');
+                        button.disabled = true;
+                        spinner.style.display = 'block';
+                    } else {
+                        button.classList.remove('loading');
+                        button.disabled = false;
+                        spinner.style.display = 'none';
+                    }
+                }
+            }
+
+            showMessage(message, type, iconClass) {
+                const container = document.getElementById('messageContainer');
+                const icon = document.getElementById('messageIcon');
+                const text = document.getElementById('messageText');
+
+                if (container && icon && text) {
+                    container.className = `message-container ${type}`;
+                    icon.className = `message-icon ${iconClass}`;
+                    text.textContent = message;
+
+                    container.classList.remove('hidden');
+
+                    setTimeout(() => {
+                        this.hideMessage();
+                    }, 5000);
+                }
+            }
+
+            hideMessage() {
+                const container = document.getElementById('messageContainer');
+                if (container) {
+                    container.classList.add('hidden');
+                }
+            }
+
+            setupValidation() {
+                ['loginEmail', 'signupEmail'].forEach(id => {
+                    const input = document.getElementById(id);
+                    if (input) {
+                        input.addEventListener('blur', (e) => {
+                            const errorId = id === 'loginEmail' ? 'emailError' : 'signupEmailError';
+                            const errorElement = document.getElementById(errorId);
+
+                            if (e.target.value && !this.isValidEmail(e.target.value)) {
+                                this.showFieldError(errorId, 'Please enter a valid email address');
+                            } else if (errorElement) {
+                                errorElement.classList.remove('show');
+                            }
+                        });
+                    }
+                });
+
+                const signupPassword = document.getElementById('signupPassword');
+                if (signupPassword) {
+                    signupPassword.addEventListener('input', (e) => {
+                        const password = e.target.value;
+                        const errorElement = document.getElementById('signupPasswordError');
+
+                        if (password.length > 0 && !this.isValidPassword(password)) {
+                            this.showFieldError('signupPasswordError', 'Password must be 8+ characters with letters and numbers');
+                        } else if (password.length >= 8 && errorElement) {
+                            errorElement.classList.remove('show');
+                        }
+                    });
+                }
+            }
+
+            checkAdminRateLimit(email) {
+                const attempts = JSON.parse(localStorage.getItem('adminLoginAttempts') || '{}');
+                const now = Date.now();
+                const userAttempts = attempts[email] || [];
+
+                const recentAttempts = userAttempts.filter(timestamp =>
+                    now - timestamp < 30 * 60 * 1000
+                );
+
+                if (recentAttempts.length >= 3) {
+                    return false;
+                }
+
+                recentAttempts.push(now);
+                attempts[email] = recentAttempts;
+                localStorage.setItem('adminLoginAttempts', JSON.stringify(attempts));
+
+                return true;
+            }
+
+            generateRequestId() {
+                return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            }
+
+            getClientInfo() {
+                return btoa(JSON.stringify({
+                    timestamp: new Date().toISOString(),
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    language: navigator.language,
+                    platform: navigator.platform
+                }));
+            }
+
+            storeAdminSession(result) {
+                const encryptedToken = this.encryptData(result.token);
+                localStorage.setItem('adminToken', encryptedToken);
+                localStorage.setItem('userRole', 'admin');
+                localStorage.setItem('adminLoginTime', Date.now());
+
+                this.setAdminSessionTimeout();
+            }
+
+            encryptData(data) {
+                return btoa(data);
+            }
+
+            setAdminSessionTimeout() {
+                const timeout = 30 * 60 * 1000;
+
+                setTimeout(() => {
+                    this.logoutAdmin();
+                }, timeout);
+            }
+
+            logoutAdmin() {
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('adminLoginTime');
+                window.location.href = '/test3.html';
+            }
+
+            logFailedAdminAttempt(email) {
+                const attempts = JSON.parse(localStorage.getItem('failedAdminAttempts') || '{}');
+                const now = Date.now();
+
+                attempts[email] = attempts[email] || [];
+                attempts[email].push(now);
+
+                localStorage.setItem('failedAdminAttempts', JSON.stringify(attempts));
+
+                if (attempts[email].length >= 5) {
+                    console.warn('Multiple failed admin login attempts detected');
+                }
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new RealmAuth();
+        });
+
+        bindEvents() {
+            // Form switching
+            document.getElementById('showSignupBtn').addEventListener('click', () => this.showSignup());
+            document.getElementById('showLoginBtn').addEventListener('click', () => this.showLogin());
+            document.getElementById('showAdminLoginBtn').addEventListener('click', () => this.showAdminLogin());
+            document.getElementById('showRegularLoginBtn').addEventListener('click', () => this.showLogin());
+
+            // Form submissions
+            document.getElementById('loginForm').addEventListener('submit', (e) => this.handleLogin(e));
+            document.getElementById('signupForm').addEventListener('submit', (e) => this.handleSignup(e));
+            document.getElementById('adminLoginForm').addEventListener('submit', (e) => this.handleAdminLogin(e));
+            document.getElementById('forgotPasswordForm').addEventListener('submit', (e) => this.handleForgotPassword(e));
+            document.getElementById('verifyOtpBtn').addEventListener('click', () => this.verifyOtp());
+            document.getElementById('resetPasswordBtn').addEventListener('click', () => this.resetPassword());
+            document.getElementById('resendOtp').addEventListener('click', () => this.resendOtp());
+            document.querySelector('.forgot-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                this.showForgotPassword();
+            });
+            document.getElementById('backToLoginBtn').addEventListener('click', () => this.showLogin());
+
+            // Real-time validation
+            this.setupValidation();
+
+            // Check if user is already logged in
+            this.checkExistingAuth();
+        }
+
+    async handleForgotPassword(e) {
+        e.preventDefault();
+        const btn = document.getElementById('sendOtpBtn');
+        const spinner = document.getElementById('otpSpinner');
+
+        try {
+            this.setLoading(btn, spinner, true);
+            const email = document.getElementById('resetEmail').value.trim();
+
+            if (!this.isValidEmail(email)) {
+                this.showFieldError('resetEmailError', 'Please enter a valid email address');
+                return;
+            }
+
+            const response = await fetch(`${this.apiBaseUrl}/forgot-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+
+            if (response.ok) {
+                document.getElementById('emailStep').classList.add('hidden');
+                document.getElementById('otpStep').classList.remove('hidden');
+                this.startOtpTimer();
+                this.showMessage('OTP sent successfully!', 'success', 'fas fa-envelope-circle-check');
+            } else {
+                const error = await response.json();
+                this.showMessage(error.message || 'Failed to send OTP', 'error', 'fas fa-exclamation-circle');
+            }
+        } catch (error) {
+            this.showMessage('Connection error. Please try again.', 'error', 'fas fa-wifi');
+        } finally {
+            this.setLoading(btn, spinner, false);
+        }
+    }
+
+    startOtpTimer() {
+        const timerDisplay = document.getElementById('otpTimer');
+        const resendBtn = document.getElementById('resendOtp');
+        let timeLeft = 300; // 5 minutes
+
+        const timer = setInterval(() => {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            if (timeLeft === 0) {
+                clearInterval(timer);
+                resendBtn.disabled = false;
+                timerDisplay.textContent = '00:00';
+            }
+            timeLeft--;
+        }, 1000);
+    }
+
+    async verifyOtp() {
+        const btn = document.getElementById('verifyOtpBtn');
+        const spinner = document.getElementById('verifySpinner');
+
+        try {
+            this.setLoading(btn, spinner, true);
+            const otp = document.getElementById('otpInput').value;
+            const email = document.getElementById('resetEmail').value;
+
+            if (!otp || otp.length !== 6) {
+                this.showFieldError('otpError', 'Please enter a valid 6-digit OTP');
+                return;
+            }
+
+            const response = await fetch(`${this.apiBaseUrl}/verify-otp`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, otp })
+            });
+
+            if (response.ok) {
+                document.getElementById('otpStep').classList.add('hidden');
+                document.getElementById('newPasswordStep').classList.remove('hidden');
+                this.showMessage('OTP verified successfully!', 'success', 'fas fa-check-circle');
+            } else {
+                const error = await response.json();
+                this.showMessage(error.message || 'Invalid OTP', 'error', 'fas fa-exclamation-circle');
+            }
+        } catch (error) {
+            this.showMessage('Connection error. Please try again.', 'error', 'fas fa-wifi');
+        } finally {
+            this.setLoading(btn, spinner, false);
+        }
+    }
+
+    async resetPassword() {
+        const btn = document.getElementById('resetPasswordBtn');
+        const spinner = document.getElementById('resetSpinner');
+
+        try {
+            this.setLoading(btn, spinner, true);
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const email = document.getElementById('resetEmail').value;
+
+            if (!this.validateNewPassword(newPassword, confirmPassword)) {
+                return;
+            }
+
+            const response = await fetch(`${this.apiBaseUrl}/reset-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, newPassword })
+            });
+
+            if (response.ok) {
+                this.showMessage('Password reset successful! Please login with your new password.', 'success', 'fas fa-check-circle');
+                setTimeout(() => this.showLogin(), 2000);
+            } else {
+                const error = await response.json();
+                this.showMessage(error.message || 'Failed to reset password', 'error', 'fas fa-exclamation-circle');
+            }
+        } catch (error) {
+            this.showMessage('Connection error. Please try again.', 'error', 'fas fa-wifi');
+        } finally {
+            this.setLoading(btn, spinner, false);
+        }
+    }
+
+    validateNewPassword(password, confirmPassword) {
+        let isValid = true;
+
+        if (!this.isValidPassword(password)) {
+            this.showFieldError('newPasswordError', 'Password must be 8+ characters with letters and numbers');
+            isValid = false;
+        }
+
+        if (password !== confirmPassword) {
+            this.showFieldError('confirmPasswordError', 'Passwords do not match');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    async resendOtp() {
+        const email = document.getElementById('resetEmail').value;
+        const resendBtn = document.getElementById('resendOtp');
+
+        try {
+            resendBtn.disabled = true;
+            const response = await fetch(`${this.apiBaseUrl}/resend-otp`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+
+            if (response.ok) {
+                this.startOtpTimer();
+                this.showMessage('New OTP sent successfully!', 'success', 'fas fa-envelope-circle-check');
+            } else {
+                const error = await response.json();
+                this.showMessage(error.message || 'Failed to resend OTP', 'error', 'fas fa-exclamation-circle');
+                resendBtn.disabled = false;
+            }
+        } catch (error) {
+            this.showMessage('Connection error. Please try again.', 'error', 'fas fa-wifi');
+            resendBtn.disabled = false;
+        }
+    }
+}
+            } catch (error) {
+                this.showMessage('Connection error. Please try again.', 'error', 'fas fa-wifi');
+                resendBtn.disabled = false;
+            }
+        }
+    }
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        new RealmAuth();
+    });
+    </script>
+</body>
+
+</html>
