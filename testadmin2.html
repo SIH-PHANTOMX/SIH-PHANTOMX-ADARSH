@@ -1,0 +1,3836 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Control Panel - Realm</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Professional Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Color Palette - Consistent with Student/Alumni */
+        :root {
+            --primary-dark: #13293D;
+            --primary-blue: #006494;
+            --accent-blue: #247BA0;
+            --bright-blue: #1B98E0;
+            --light-bg: #E8F1F2;
+
+            --white: #FFFFFF;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E1;
+            --gray-400: #94A3B8;
+            --gray-500: #64748B;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1E293B;
+            --gray-900: #0F172A;
+
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--light-bg);
+            color: var(--gray-700);
+            line-height: 1.5;
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0 20px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        .logo .realm-first {
+            color: #1B98E0;
+        }
+
+        .logo .realm-second {
+            color: var(--primary-dark);
+        }
+
+        .admin-badge {
+            background: linear-gradient(135deg, var(--error), #dc2626);
+            color: var(--white);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 45px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            font-size: 0.9rem;
+            background: var(--gray-50);
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(36, 123, 160, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            font-size: 1rem;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, var(--accent-blue), var(--bright-blue));
+            color: var(--white);
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .search-btn:hover {
+            transform: translateY(-50%) translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: var(--gray-600);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+        }
+
+        .notification-btn:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: var(--error);
+            color: var(--white);
+            font-size: 0.7rem;
+            padding: 2px 5px;
+            border-radius: 10px;
+            min-width: 16px;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--error), #dc2626);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Admin Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 260px;
+            height: calc(100vh - 70px);
+            background: var(--white);
+            border-right: 1px solid var(--gray-200);
+            padding: 20px 0;
+            overflow-y: auto;
+            z-index: 50;
+            transition: var(--transition);
+        }
+
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+
+        .sidebar-title {
+            padding: 0 20px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--gray-600);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .sidebar-item:hover {
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .sidebar-item.active {
+            background: rgba(36, 123, 160, 0.1);
+            color: var(--accent-blue);
+            border-left-color: var(--accent-blue);
+        }
+
+        .sidebar-item i {
+            font-size: 1.1rem;
+            width: 22px;
+            text-align: center;
+        }
+
+        .sidebar-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .sidebar-count {
+            margin-left: auto;
+            background: var(--error);
+            color: var(--white);
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .sidebar-count.success {
+            background: var(--success);
+        }
+
+        .sidebar-count.warning {
+            background: var(--warning);
+        }
+
+        .sidebar-count.info {
+            background: var(--info);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 25px;
+            min-height: calc(100vh - 70px);
+            transition: var(--transition);
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Stats Overview */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 25px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--bright-blue));
+        }
+
+        .stat-card.success::before {
+            background: linear-gradient(135deg, var(--success), #059669);
+        }
+
+        .stat-card.warning::before {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+        }
+
+        .stat-card.info::before {
+            background: linear-gradient(135deg, var(--info), #2563eb);
+        }
+
+        .stat-card.danger::before {
+            background: linear-gradient(135deg, var(--error), #dc2626);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: var(--white);
+            background: linear-gradient(135deg, var(--accent-blue), var(--bright-blue));
+        }
+
+        .stat-icon.success {
+            background: linear-gradient(135deg, var(--success), #059669);
+        }
+
+        .stat-icon.warning {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+        }
+
+        .stat-icon.info {
+            background: linear-gradient(135deg, var(--info), #2563eb);
+        }
+
+        .stat-icon.danger {
+            background: linear-gradient(135deg, var(--error), #dc2626);
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8rem;
+        }
+
+        .stat-trend.positive {
+            color: var(--success);
+        }
+
+        .stat-trend.negative {
+            color: var(--error);
+        }
+
+        .stat-trend.neutral {
+            color: var(--gray-500);
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .data-table th {
+            background: var(--gray-50);
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table tr:hover {
+            background: var(--gray-50);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-badge.verified {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .status-badge.rejected {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        .status-badge.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--bright-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .btn-primary,
+        .btn-secondary,
+        .btn-success,
+        .btn-danger,
+        .btn-warning {
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--bright-blue));
+            color: var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 2px solid var(--gray-200);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+            border-color: var(--gray-300);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-overlay.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 30px;
+            width: 90vw;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--gray-700);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 5px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            background: var(--white);
+            color: var(--gray-700);
+            transition: var(--transition);
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(36, 123, 160, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        /* Profile Dropdown */
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            min-width: 220px;
+            z-index: 200;
+            margin-top: 8px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .profile-dropdown.show {
+            display: block;
+        }
+
+        .dropdown-header {
+            padding: 18px;
+            border-bottom: 1px solid var(--gray-200);
+            background: var(--gray-50);
+        }
+
+        .dropdown-name {
+            font-weight: 600;
+            color: var(--gray-900);
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+
+        .dropdown-email {
+            color: var(--gray-600);
+            font-size: 0.8rem;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            color: var(--gray-700);
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .dropdown-item i {
+            font-size: 1rem;
+            width: 18px;
+            text-align: center;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--gray-200);
+            margin: 8px 0;
+        }
+
+        /* Verification Cards */
+        .verification-card {
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+            background: var(--white);
+            transition: var(--transition);
+        }
+
+        .verification-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            height: 400px;
+            position: relative;
+        }
+
+        .chart-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: var(--gray-50);
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--radius-lg);
+            color: var(--gray-500);
+            font-size: 1.1rem;
+        }
+
+        /* Settings Cards */
+        .settings-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: var(--gray-300);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-switch.active {
+            background: var(--success);
+        }
+
+        .toggle-switch::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--white);
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: var(--transition);
+        }
+
+        .toggle-switch.active::before {
+            transform: translateX(26px);
+        }
+
+        /* Search Results */
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 200;
+            display: none;
+        }
+
+        .search-result-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--gray-100);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .search-result-item:hover {
+            background: var(--gray-50);
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-type {
+            font-size: 0.75rem;
+            color: var(--accent-blue);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .search-result-title {
+            font-weight: 500;
+            color: var(--gray-900);
+            margin: 2px 0;
+        }
+
+        .search-result-desc {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+
+        /* Report Cards */
+        .report-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .report-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .report-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--white);
+            margin-bottom: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .search-container {
+                width: 250px;
+            }
+
+            .stats-overview {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 260px;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .search-container {
+                width: 200px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .stats-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Focus and accessibility */
+        *:focus-visible {
+            outline: 2px solid var(--accent-blue);
+            outline-offset: 2px;
+        }
+
+        /* Hidden class for view switching */
+        .view-content {
+            display: none;
+        }
+
+        .view-content.active {
+            display: block;
+        }
+
+        /* Loading states */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gray-300);
+            border-top: 2px solid var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <span class="realm-first">REA</span><span class="realm-second">LM</span>
+            </div>
+            <div class="admin-badge">Admin</div>
+
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search users, events, articles..."
+                    id="globalSearch" autocomplete="off">
+                <button class="search-btn" id="searchBtn">Search</button>
+                <div class="search-results" id="searchResults"></div>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button class="notification-btn" id="notificationBtn" title="System Alerts">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">7</span>
+            </button>
+
+            <div class="profile-avatar" id="profileAvatar">
+                <span id="avatarInitials">AD</span>
+
+                <!-- Profile Dropdown -->
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-name" id="dropdownName">Admin User</div>
+                        <div class="dropdown-email" id="dropdownEmail">admin@realm.com</div>
+                    </div>
+
+                    <div class="dropdown-item">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Admin Profile</span>
+                    </div>
+
+                    <div class="dropdown-item">
+                        <i class="fas fa-cogs"></i>
+                        <span>System Settings</span>
+                    </div>
+
+                    <div class="dropdown-divider"></div>
+
+                    <div class="dropdown-item" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-title">Overview</div>
+            <div class="sidebar-item active" data-view="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span class="sidebar-text">Dashboard</span>
+            </div>
+            <div class="sidebar-item" data-view="analytics">
+                <i class="fas fa-chart-line"></i>
+                <span class="sidebar-text">Analytics</span>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">User Management</div>
+            <div class="sidebar-item" data-view="students">
+                <i class="fas fa-user-graduate"></i>
+                <span class="sidebar-text">Students</span>
+                <span class="sidebar-count info" id="studentsCount">248</span>
+            </div>
+            <div class="sidebar-item" data-view="alumni">
+                <i class="fas fa-users"></i>
+                <span class="sidebar-text">Alumni</span>
+                <span class="sidebar-count success" id="alumniCount">156</span>
+            </div>
+            <div class="sidebar-item" data-view="verifications">
+                <i class="fas fa-user-check"></i>
+                <span class="sidebar-text">Verifications</span>
+                <span class="sidebar-count warning" id="verificationCount">0</span>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Content Management</div>
+            <div class="sidebar-item" data-view="events">
+                <i class="fas fa-calendar"></i>
+                <span class="sidebar-text">Events</span>
+                <span class="sidebar-count" id="eventsCount">42</span>
+            </div>
+            <div class="sidebar-item" data-view="articles">
+                <i class="fas fa-newspaper"></i>
+                <span class="sidebar-text">Articles</span>
+                <span class="sidebar-count" id="articlesCount">78</span>
+            </div>
+            <div class="sidebar-item" data-view="questions">
+                <i class="fas fa-question-circle"></i>
+                <span class="sidebar-text">Q&A Board</span>
+                <span class="sidebar-count" id="questionsCount">134</span>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">System</div>
+            <div class="sidebar-item" data-view="reports">
+                <i class="fas fa-file-alt"></i>
+                <span class="sidebar-text">Reports</span>
+            </div>
+            <div class="sidebar-item" data-view="settings">
+                <i class="fas fa-cog"></i>
+                <span class="sidebar-text">Settings</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Dashboard View -->
+        <div class="view-content active" id="dashboardView">
+            <div class="page-header">
+                <h1 class="page-title">Admin Dashboard</h1>
+                <div class="page-actions">
+                    <button class="btn-secondary" onclick="adminDashboard.exportReport()">
+                        <i class="fas fa-download"></i>
+                        Export Report
+                    </button>
+                    <button class="btn-primary" onclick="adminDashboard.showQuickActions()">
+                        <i class="fas fa-plus"></i>
+                        Quick Actions
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="totalUsersCount">404</div>
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+12% this month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card warning">
+                    <div class="stat-header">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-user-clock"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="pendingVerificationsCount">0</div>
+                    <div class="stat-label">Pending Verifications</div>
+                    <div class="stat-trend neutral">
+                        <i class="fas fa-clock"></i>
+                        <span>Requires attention</span>
+                    </div>
+                </div>
+
+                <div class="stat-card success">
+                    <div class="stat-header">
+                        <div class="stat-icon success">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="activeEventsCount">42</div>
+                    <div class="stat-label">Active Events</div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+8 this week</span>
+                    </div>
+                </div>
+
+                <div class="stat-card info">
+                    <div class="stat-header">
+                        <div class="stat-icon info">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">89%</div>
+                    <div class="stat-label">Platform Activity</div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>High engagement</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Activities</h2>
+                    <div class="section-actions">
+                        <button class="btn-secondary btn-sm">View All</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Activity</th>
+                                <th>User</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentActivities">
+                            <!-- Activities will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- System Health -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">System Health</h2>
+                    <div class="section-actions">
+                        <button class="btn-secondary btn-sm"
+                            onclick="adminDashboard.refreshSystemHealth()">Refresh</button>
+                    </div>
+                </div>
+                <div class="stats-overview">
+                    <div class="stat-card success" style="margin: 0;">
+                        <div class="stat-value" style="font-size: 1.5rem;" id="systemUptime">99.9%</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                    <div class="stat-card" style="margin: 0;">
+                        <div class="stat-value" style="font-size: 1.5rem;" id="avgResponse">1.2s</div>
+                        <div class="stat-label">Avg Response</div>
+                    </div>
+                    <div class="stat-card info" style="margin: 0;">
+                        <div class="stat-value" style="font-size: 1.5rem;" id="storageUsed">45GB</div>
+                        <div class="stat-label">Storage Used</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics View -->
+        <div class="view-content" id="analyticsView">
+            <div class="page-header">
+                <h1 class="page-title">Analytics Dashboard</h1>
+                <div class="page-actions">
+                    <select class="form-select" style="width: auto;" id="analyticsTimeframe">
+                        <option value="7d">Last 7 days</option>
+                        <option value="30d" selected>Last 30 days</option>
+                        <option value="90d">Last 3 months</option>
+                        <option value="1y">Last year</option>
+                    </select>
+                    <button class="btn-primary" onclick="adminDashboard.exportAnalytics()">
+                        <i class="fas fa-download"></i>
+                        Export Data
+                    </button>
+                </div>
+            </div>
+
+            <!-- Analytics Stats -->
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="totalPageViews">12,847</div>
+                    <div class="stat-label">Page Views</div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+15.3% vs last period</span>
+                    </div>
+                </div>
+
+                <div class="stat-card info">
+                    <div class="stat-header">
+                        <div class="stat-icon info">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="uniqueVisitors">3,456</div>
+                    <div class="stat-label">Unique Visitors</div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+8.7% vs last period</span>
+                    </div>
+                </div>
+
+                <div class="stat-card success">
+                    <div class="stat-header">
+                        <div class="stat-icon success">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="newRegistrations">189</div>
+                    <div class="stat-label">New Registrations</div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+23.1% vs last period</span>
+                    </div>
+                </div>
+
+                <div class="stat-card warning">
+                    <div class="stat-header">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="avgSessionTime">4m 32s</div>
+                    <div class="stat-label">Avg Session Time</div>
+                    <div class="stat-trend negative">
+                        <i class="fas fa-arrow-down"></i>
+                        <span>-5.2% vs last period</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="chart-container">
+                <div class="section-header" style="margin-bottom: 20px;">
+                    <h3 class="section-title">User Growth Trend</h3>
+                </div>
+                <div class="chart-placeholder">
+                    <i class="fas fa-chart-line" style="font-size: 2rem; margin-right: 10px;"></i>
+                    Chart visualization would be integrated here
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="chart-container" style="height: 300px;">
+                    <div class="section-header" style="margin-bottom: 15px;">
+                        <h3 class="section-title">User Types Distribution</h3>
+                    </div>
+                    <div class="chart-placeholder">
+                        <i class="fas fa-chart-pie" style="font-size: 1.5rem; margin-right: 8px;"></i>
+                        Pie Chart
+                    </div>
+                </div>
+
+                <div class="chart-container" style="height: 300px;">
+                    <div class="section-header" style="margin-bottom: 15px;">
+                        <h3 class="section-title">Popular Features</h3>
+                    </div>
+                    <div class="chart-placeholder">
+                        <i class="fas fa-chart-bar" style="font-size: 1.5rem; margin-right: 8px;"></i>
+                        Bar Chart
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Content -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Top Performing Content</h2>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Content</th>
+                                <th>Type</th>
+                                <th>Views</th>
+                                <th>Engagement</th>
+                                <th>Performance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topContentTable">
+                            <!-- Will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports View -->
+        <div class="view-content" id="reportsView">
+            <div class="page-header">
+                <h1 class="page-title">Reports & Analytics</h1>
+                <div class="page-actions">
+                    <button class="btn-secondary" onclick="adminDashboard.scheduleReport()">
+                        <i class="fas fa-clock"></i>
+                        Schedule Report
+                    </button>
+                    <button class="btn-primary" onclick="adminDashboard.generateCustomReport()">
+                        <i class="fas fa-plus"></i>
+                        Custom Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Report Categories -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                <div class="report-card" onclick="adminDashboard.generateReport('user')">
+                    <div class="report-icon"
+                        style="background: linear-gradient(135deg, var(--accent-blue), var(--bright-blue));">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>User Reports</h3>
+                    <p style="color: var(--gray-600); font-size: 0.9rem;">Registration trends, user activity,
+                        demographics</p>
+                    <div style="margin-top: 15px;">
+                        <span class="status-badge active">Generate Now</span>
+                    </div>
+                </div>
+
+                <div class="report-card" onclick="adminDashboard.generateReport('engagement')">
+                    <div class="report-icon" style="background: linear-gradient(135deg, var(--success), #059669);">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Engagement Reports</h3>
+                    <p style="color: var(--gray-600); font-size: 0.9rem;">Events participation, article views, Q&A
+                        activity</p>
+                    <div style="margin-top: 15px;">
+                        <span class="status-badge active">Generate Now</span>
+                    </div>
+                </div>
+
+                <div class="report-card" onclick="adminDashboard.generateReport('verification')">
+                    <div class="report-icon" style="background: linear-gradient(135deg, var(--warning), #d97706);">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <h3>Verification Reports</h3>
+                    <p style="color: var(--gray-600); font-size: 0.9rem;">Approval rates, pending requests, rejection
+                        reasons</p>
+                    <div style="margin-top: 15px;">
+                        <span class="status-badge active">Generate Now</span>
+                    </div>
+                </div>
+
+                <div class="report-card" onclick="adminDashboard.generateReport('content')">
+                    <div class="report-icon" style="background: linear-gradient(135deg, var(--info), #2563eb);">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <h3>Content Reports</h3>
+                    <p style="color: var(--gray-600); font-size: 0.9rem;">Article performance, event success, popular
+                        topics</p>
+                    <div style="margin-top: 15px;">
+                        <span class="status-badge active">Generate Now</span>
+                    </div>
+                </div>
+
+                <div class="report-card" onclick="adminDashboard.generateReport('system')">
+                    <div class="report-icon" style="background: linear-gradient(135deg, var(--error), #dc2626);">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3>System Reports</h3>
+                    <p style="color: var(--gray-600); font-size: 0.9rem;">Performance metrics, error logs, uptime
+                        statistics</p>
+                    <div style="margin-top: 15px;">
+                        <span class="status-badge active">Generate Now</span>
+                    </div>
+                </div>
+
+                <div class="report-card" onclick="adminDashboard.generateReport('financial')">
+                    <div class="report-icon"
+                        style="background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h3>Financial Reports</h3>
+                    <p style="color: var(--gray-600); font-size: 0.9rem;">Revenue tracking, cost analysis, budget
+                        reports</p>
+                    <div style="margin-top: 15px;">
+                        <span class="status-badge active">Generate Now</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Reports -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Reports</h2>
+                    <button class="btn-secondary btn-sm" onclick="adminDashboard.viewAllReports()">View All</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Report Name</th>
+                                <th>Type</th>
+                                <th>Generated</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentReportsTable">
+                            <!-- Will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings View -->
+        <div class="view-content" id="settingsView">
+            <div class="page-header">
+                <h1 class="page-title">System Settings</h1>
+                <div class="page-actions">
+                    <button class="btn-secondary" onclick="adminDashboard.backupSettings()">
+                        <i class="fas fa-save"></i>
+                        Backup Settings
+                    </button>
+                    <button class="btn-primary" onclick="adminDashboard.saveAllSettings()">
+                        <i class="fas fa-check"></i>
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+
+            <!-- General Settings -->
+            <div class="settings-card">
+                <h3 style="margin-bottom: 20px; color: var(--gray-900);">
+                    <i class="fas fa-cog" style="margin-right: 8px;"></i>
+                    General Settings
+                </h3>
+
+                <div class="settings-item">
+                    <div>
+                        <strong>Platform Name</strong>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">The name displayed across the platform</p>
+                    </div>
+                    <input type="text" class="form-input" value="Realm" style="width: 200px;" id="platformName">
+                </div>
+
+                <div class="settings-item">
+                    <div>
+                        <strong>Maintenance Mode</strong>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">Enable to temporarily disable user access
+                        </p>
+                    </div>
+                    <div class="toggle-switch" onclick="adminDashboard.toggleSetting(this, 'maintenanceMode')"></div>
+                </div>
+
+                <div class="settings-item">
+                    <div>
+                        <strong>User Registration</strong>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">Allow new users to register</p>
+                    </div>
+                    <div class="toggle-switch active" onclick="adminDashboard.toggleSetting(this, 'userRegistration')">
+                    </div>
+                </div>
+
+                <div class="settings-item">
+                    <div>
+                        <strong>Email Notifications</strong>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">Send system notifications via email</p>
+                    </div>
+                    <div class="toggle-switch active"
+                        onclick="adminDashboard.toggleSetting(this, 'emailNotifications')"></div>
+                </div>
+            </div>
+
+            <!-- Security Settings -->
+            <div class="settings-card">
+                <h3 style="margin-bottom: 20px; color: var(--gray-900);">
+                    <i class="fas fa-shield-alt" style="margin-right: 8px;"></i>
+                    Security Settings
+                </h3>
+
+                <div class="settings-item">
+                    <div>
+                        <strong>Two-Factor Authentication</strong>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">Require 2FA for admin accounts</p>
+                    </div>
+                    <div class="toggle-switch" onclick="adminDashboard.toggleSetting(this, 'twoFactorAuth')"></div>
+                </div>
+
+                <div class="settings-item">
+                    <div>
+                        <strong>Session Timeout</strong>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">Automatic logout time (minutes)</p>
+                    </div>
+                    <input type="number" class="form-input" value="60" style="width: 100px;" id="sessionTimeout" min="5"
+                        max="480">
+                </div>
+
+                <div class="settings-item">
+                    <div>
+                        <strong>Login Attempt Limit</strong>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">Max failed login attempts before lockout
+                        </p>
+                    </div>
+                    <input type="number" class="form-input" value="5" style="width: 100px;" id="loginAttemptLimit"
+                        min="3" max="10">
+                </div>
+
+                <div class="settings-item">
+                    <div>
+                        <strong>IP Whitelist</strong>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">Restrict admin access to specific IPs</p>
+                    </div>
+                    <div class="toggle-switch" onclick="adminDashboard.toggleSetting(this, 'ipWhitelist')"></div>
+                </div>
+            </div>
+
+            <!-- Content Settings -->
+            <div class="settings-card">
+                <h3 style="margin-bottom: 20px; color: var(--gray-900);">
+                    <i class="fas fa-newspaper" style="margin-right: 8px;"></i>
+                    Content Settings
+                </h3>
+
+                <div class="settings-item">
+                    <div>
+                        <strong>Auto-approve Articles</strong>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">Automatically publish articles from
+                            verified users</p>
+                    </div>
+                    <div class="toggle-switch" onclick="adminDashboard.toggleSetting(this, 'autoApproveArticles')">
+                    </div>
+                </div>
+
+                <div class="settings-item">
+                    <div>
+                        <strong>Comment Moderation</strong>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">Require approval for comments</p>
+                    </div>
+                    <div class="toggle-switch active" onclick="adminDashboard.toggleSetting(this, 'commentModeration')">
+                    </div>
+                </div>
+
+                <div class="settings-item">
+                    <div>
+                        <strong>File Upload Limit</strong>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">Maximum file size (MB)</p>
+                    </div>
+                    <input type="number" class="form-input" value="10" style="width: 100px;" id="fileUploadLimit"
+                        min="1" max="100">
+                </div>
+            </div>
+
+            <!-- Notification Settings -->
+            <div class="settings-card">
+                <h3 style="margin-bottom: 20px; color: var(--gray-900);">
+                    <i class="fas fa-bell" style="margin-right: 8px;"></i>
+                    Notification Settings
+                </h3>
+
+                <div class="settings-item">
+                    <div>
+                        <strong>New User Notifications</strong>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">Notify admins of new registrations</p>
+                    </div>
+                    <div class="toggle-switch active"
+                        onclick="adminDashboard.toggleSetting(this, 'newUserNotifications')"></div>
+                </div>
+
+                <div class="settings-item">
+                    <div>
+                        <strong>System Alert Notifications</strong>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">Alert for system issues</p>
+                    </div>
+                    <div class="toggle-switch active" onclick="adminDashboard.toggleSetting(this, 'systemAlerts')">
+                    </div>
+                </div>
+
+                <div class="settings-item">
+                    <div>
+                        <strong>Weekly Reports</strong>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">Send weekly activity reports</p>
+                    </div>
+                    <div class="toggle-switch active" onclick="adminDashboard.toggleSetting(this, 'weeklyReports')">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students View -->
+        <div class="view-content" id="studentsView">
+            <div class="page-header">
+                <h1 class="page-title">Student Management</h1>
+                <div class="page-actions">
+                    <button class="btn-secondary" onclick="adminDashboard.filterStudents()">
+                        <i class="fas fa-filter"></i>
+                        Filter
+                    </button>
+                    <button class="btn-primary" onclick="openUserModal('student')">
+                        <i class="fas fa-plus"></i>
+                        Add Student
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">All Students (<span id="studentsTotal">0</span>)</h2>
+                    <div class="section-actions">
+                        <button class="btn-secondary btn-sm" onclick="adminDashboard.exportStudents()">Export</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Course</th>
+                                <th>Year</th>
+                                <th>Status</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody">
+                            <!-- Students will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alumni View -->
+        <div class="view-content" id="alumniView">
+            <div class="page-header">
+                <h1 class="page-title">Alumni Management</h1>
+                <div class="page-actions">
+                    <button class="btn-secondary" onclick="adminDashboard.filterAlumni()">
+                        <i class="fas fa-filter"></i>
+                        Filter
+                    </button>
+                    <button class="btn-primary" onclick="openUserModal('alumni')">
+                        <i class="fas fa-plus"></i>
+                        Add Alumni
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">All Alumni (<span id="alumniTotal">0</span>)</h2>
+                    <div class="section-actions">
+                        <button class="btn-secondary btn-sm" onclick="adminDashboard.exportAlumni()">Export</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Alumni</th>
+                                <th>Course</th>
+                                <th>Passing Year</th>
+                                <th>Current Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alumniTableBody">
+                            <!-- Alumni will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Verifications View -->
+        <div class="view-content" id="verificationsView">
+            <div class="page-header">
+                <h1 class="page-title">Student Verification Requests</h1>
+                <div class="page-actions">
+                    <button class="btn-primary" onclick="adminDashboard.refreshVerifications()">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Pending Verifications (<span id="pendingCount">0</span>)</h2>
+                </div>
+                <div id="verificationContainer">
+                    <p style="text-align: center; color: var(--gray-500); padding: 40px;">No pending verification
+                        requests</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Events View -->
+        <div class="view-content" id="eventsView">
+            <div class="page-header">
+                <h1 class="page-title">Event Management</h1>
+                <div class="page-actions">
+                    <button class="btn-secondary">
+                        <i class="fas fa-calendar"></i>
+                        Calendar View
+                    </button>
+                    <button class="btn-primary" onclick="openEventModal()">
+                        <i class="fas fa-plus"></i>
+                        Create Event
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">All Events (<span id="eventsTotal">0</span>)</h2>
+                    <div class="section-actions">
+                        <button class="btn-secondary btn-sm" onclick="adminDashboard.exportEvents()">Export</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Host</th>
+                                <th>Date</th>
+                                <th>Attendees</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventsTableBody">
+                            <!-- Events will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Articles View -->
+        <div class="view-content" id="articlesView">
+            <div class="page-header">
+                <h1 class="page-title">Article Management</h1>
+                <div class="page-actions">
+                    <button class="btn-secondary" onclick="adminDashboard.filterArticles()">
+                        <i class="fas fa-filter"></i>
+                        Filter
+                    </button>
+                    <button class="btn-primary" onclick="adminDashboard.createArticle()">
+                        <i class="fas fa-plus"></i>
+                        Create Article
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">All Articles (<span id="articlesTotal">0</span>)</h2>
+                    <div class="section-actions">
+                        <button class="btn-secondary btn-sm" onclick="adminDashboard.exportArticles()">Export</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Article</th>
+                                <th>Author</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Published</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="articlesTableBody">
+                            <!-- Articles will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questions View -->
+        <div class="view-content" id="questionsView">
+            <div class="page-header">
+                <h1 class="page-title">Q&A Board Management</h1>
+                <div class="page-actions">
+                    <button class="btn-secondary" onclick="adminDashboard.moderateQuestions()">
+                        <i class="fas fa-shield-alt"></i>
+                        Moderate
+                    </button>
+                    <button class="btn-primary" onclick="adminDashboard.exportQuestions()">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">All Questions (<span id="questionsTotal">0</span>)</h2>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Question</th>
+                                <th>Asked By</th>
+                                <th>Answers</th>
+                                <th>Category</th>
+                                <th>Posted</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="questionsTableBody">
+                            <!-- Questions will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- User Management Modal -->
+    <div class="modal-overlay hidden" id="userModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="userModalTitle">Add User</h2>
+                <button class="modal-close" onclick="closeModal('userModal')">&times;</button>
+            </div>
+            <form id="userForm">
+                <div class="form-group">
+                    <label class="form-label">Full Name *</label>
+                    <input type="text" class="form-input" name="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email *</label>
+                    <input type="email" class="form-input" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Role *</label>
+                    <select class="form-select" id="userRole" name="role" required>
+                        <option value="student">Student</option>
+                        <option value="alumni">Alumni</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Course</label>
+                    <input type="text" class="form-input" name="course">
+                </div>
+                <div class="form-group" id="yearGroup">
+                    <label class="form-label" id="yearLabel">Current Year</label>
+                    <input type="number" class="form-input" name="year" min="1" max="5">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone</label>
+                    <input type="tel" class="form-input" name="phone">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn-secondary" onclick="closeModal('userModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">
+                        <span class="btn-text">Save User</span>
+                        <div class="spinner" style="display: none;"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Event Modal -->
+    <div class="modal-overlay hidden" id="eventModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create Event</h2>
+                <button class="modal-close" onclick="closeModal('eventModal')">&times;</button>
+            </div>
+            <form id="eventForm">
+                <div class="form-group">
+                    <label class="form-label">Event Title *</label>
+                    <input type="text" class="form-input" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description *</label>
+                    <textarea class="form-textarea" name="description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date & Time *</label>
+                    <input type="datetime-local" class="form-input" name="datetime" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Max Attendees *</label>
+                    <input type="number" class="form-input" name="maxAttendees" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Host</label>
+                    <input type="text" class="form-input" name="host">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Location/Link</label>
+                    <input type="text" class="form-input" name="location" placeholder="Venue or meeting link">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn-secondary" onclick="closeModal('eventModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">
+                        <span class="btn-text">Create Event</span>
+                        <div class="spinner" style="display: none;"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Verification Details Modal -->
+    <div class="modal-overlay hidden" id="verificationModal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Student Verification Details</h2>
+                <button class="modal-close" onclick="adminDashboard.closeModal('verificationModal')">&times;</button>
+            </div>
+            <div id="verificationDetails"></div>
+            <div style="display: flex; gap: 15px; margin-top: 25px;">
+                <button class="btn-success" id="approveBtn" onclick="adminDashboard.approveVerification()">
+                    <i class="fas fa-check"></i>
+                    <span class="btn-text">Approve</span>
+                    <div class="spinner" style="display: none;"></div>
+                </button>
+                <button class="btn-danger" id="rejectBtn" onclick="adminDashboard.showRejectModal()">
+                    <i class="fas fa-times"></i>
+                    Reject
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rejection Modal -->
+    <div class="modal-overlay hidden" id="rejectionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Reject Verification</h2>
+                <button class="modal-close" onclick="adminDashboard.closeModal('rejectionModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Reason for Rejection *</label>
+                <textarea id="rejectionReason" class="form-textarea"
+                    placeholder="Please provide a clear reason for rejection..." required></textarea>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-secondary" onclick="adminDashboard.closeModal('rejectionModal')">Cancel</button>
+                <button class="btn-danger" onclick="adminDashboard.rejectVerification()">
+                    <i class="fas fa-times"></i>
+                    <span class="btn-text">Reject</span>
+                    <div class="spinner" style="display: none;"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class AdminDashboard {
+            constructor() {
+                this.currentView = 'dashboard';
+                this.apiBaseUrl = '/api';
+                this.currentVerification = null;
+                this.authHeaders = {};
+                this.searchTimeout = null;
+                this.settings = {
+                    maintenanceMode: false,
+                    userRegistration: true,
+                    emailNotifications: true,
+                    twoFactorAuth: false,
+                    sessionTimeout: 60,
+                    loginAttemptLimit: 5,
+                    ipWhitelist: false,
+                    autoApproveArticles: false,
+                    commentModeration: true,
+                    fileUploadLimit: 10,
+                    newUserNotifications: true,
+                    systemAlerts: true,
+                    weeklyReports: true
+                };
+                this.init();
+            }
+
+            init() {
+                this.log('Admin Dashboard initializing...');
+                this.checkAuthentication();
+                this.bindEvents();
+                this.loadDashboardData();
+                this.updateDashboardStats();
+                this.loadSampleData();
+            }
+
+            log(message) {
+                console.log(`[AdminDashboard] ${message}`);
+            }
+
+            checkAuthentication() {
+                const token = localStorage.getItem('authToken');
+                const role = localStorage.getItem('userRole');
+                const testMode = true; // Set to false for production
+
+                this.log(`Token: ${token ? 'Present' : 'Missing'}, Role: ${role}`);
+
+                if (testMode) {
+                    this.log('Running in test mode - skipping auth enforcement');
+                    return;
+                }
+
+                if (!token) {
+                    this.log('No token found - redirecting to login');
+                    window.location.href = './login.html';
+                    return;
+                }
+
+                if (role !== 'admin') {
+                    this.log(`Invalid role: ${role}, redirecting to login`);
+                    window.location.href = './login.html';
+                    return;
+                }
+
+                this.authHeaders = {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                };
+            }
+
+            bindEvents() {
+                this.log('Binding events...');
+
+                // Profile dropdown
+                const profileAvatar = document.getElementById('profileAvatar');
+                if (profileAvatar) {
+                    profileAvatar.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.toggleProfileDropdown();
+                    });
+                }
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', () => {
+                    this.closeProfileDropdown();
+                    this.hideSearchResults();
+                });
+
+                // Search functionality
+                const searchInput = document.getElementById('globalSearch');
+                searchInput.addEventListener('input', (e) => {
+                    clearTimeout(this.searchTimeout);
+                    this.searchTimeout = setTimeout(() => {
+                        this.performSearch(e.target.value);
+                    }, 300);
+                });
+
+                searchInput.addEventListener('focus', () => {
+                    if (searchInput.value.trim()) {
+                        this.performSearch(searchInput.value);
+                    }
+                });
+
+                document.getElementById('searchBtn').addEventListener('click', () => {
+                    this.performSearch(searchInput.value);
+                });
+
+                // Sidebar navigation
+                document.querySelectorAll('.sidebar-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const view = item.getAttribute('data-view');
+                        if (view) {
+                            this.switchView(view);
+                        }
+                    });
+                });
+
+                // Logout
+                const logoutBtn = document.getElementById('logoutBtn');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.logout();
+                    });
+                }
+
+                // Form submissions
+                document.getElementById('userForm').addEventListener('submit', (e) => {
+                    this.handleUserSubmission(e);
+                });
+
+                document.getElementById('eventForm').addEventListener('submit', (e) => {
+                    this.handleEventSubmission(e);
+                });
+
+                // User role change handler
+                document.getElementById('userRole').addEventListener('change', (e) => {
+                    this.updateUserForm(e.target.value);
+                });
+
+                // Analytics timeframe change
+                const analyticsTimeframe = document.getElementById('analyticsTimeframe');
+                if (analyticsTimeframe) {
+                    analyticsTimeframe.addEventListener('change', (e) => {
+                        this.updateAnalytics(e.target.value);
+                    });
+                }
+
+                this.log('Events bound successfully');
+            }
+
+            // Search Implementation
+            performSearch(query) {
+                if (!query || query.trim().length < 2) {
+                    this.hideSearchResults();
+                    return;
+                }
+
+                const searchResults = this.binarySearch(query.toLowerCase());
+                this.displaySearchResults(searchResults);
+            }
+
+            binarySearch(query) {
+                // Sample data for search
+                const searchData = [
+                    { type: 'user', title: 'John Doe', desc: 'B.Tech Computer Science - Student', id: 'user_1' },
+                    { type: 'user', title: 'Alice Smith', desc: 'B.Tech IT - Student', id: 'user_2' },
+                    { type: 'user', title: 'Mike Brown', desc: 'Senior Software Engineer - Alumni', id: 'user_3' },
+                    { type: 'event', title: 'Tech Career AMA', desc: 'Q&A session about tech careers', id: 'event_1' },
+                    { type: 'event', title: 'Resume Workshop', desc: 'How to build a winning resume', id: 'event_2' },
+                    { type: 'article', title: 'Breaking into Tech', desc: 'Complete guide for tech careers', id: 'article_1' },
+                    { type: 'article', title: 'Remote Work Best Practices', desc: 'Tips for remote productivity', id: 'article_2' },
+                    { type: 'setting', title: 'User Management', desc: 'Manage students and alumni', id: 'students' },
+                    { type: 'setting', title: 'Analytics Dashboard', desc: 'View platform analytics', id: 'analytics' },
+                    { type: 'setting', title: 'System Settings', desc: 'Configure platform settings', id: 'settings' }
+                ].sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
+
+                // Binary search implementation
+                const results = [];
+                const queryLower = query.toLowerCase();
+
+                for (const item of searchData) {
+                    if (item.title.toLowerCase().includes(queryLower) ||
+                        item.desc.toLowerCase().includes(queryLower)) {
+                        results.push(item);
+                    }
+                }
+
+                return results.slice(0, 8); // Limit to 8 results
+            }
+
+            displaySearchResults(results) {
+                const searchResultsDiv = document.getElementById('searchResults');
+
+                if (results.length === 0) {
+                    searchResultsDiv.innerHTML = '<div class="search-result-item">No results found</div>';
+                } else {
+                    searchResultsDiv.innerHTML = results.map(result => `
+                        <div class="search-result-item" onclick="adminDashboard.selectSearchResult('${result.type}', '${result.id}')">
+                            <div class="search-result-type">${result.type}</div>
+                            <div class="search-result-title">${result.title}</div>
+                            <div class="search-result-desc">${result.desc}</div>
+                        </div>
+                    `).join('');
+                }
+
+                searchResultsDiv.style.display = 'block';
+            }
+
+            selectSearchResult(type, id) {
+                this.hideSearchResults();
+
+                switch (type) {
+                    case 'user':
+                        this.switchView('students');
+                        this.highlightUser(id);
+                        break;
+                    case 'event':
+                        this.switchView('events');
+                        this.highlightEvent(id);
+                        break;
+                    case 'article':
+                        this.switchView('articles');
+                        this.highlightArticle(id);
+                        break;
+                    case 'setting':
+                        this.switchView(id);
+                        break;
+                }
+
+                // Clear search input
+                document.getElementById('globalSearch').value = '';
+            }
+
+            hideSearchResults() {
+                document.getElementById('searchResults').style.display = 'none';
+            }
+
+            highlightUser(userId) {
+                // Highlight specific user in the table
+                setTimeout(() => {
+                    const userRow = document.querySelector(`[data-user-id="${userId}"]`);
+                    if (userRow) {
+                        userRow.style.background = '#e6f3ff';
+                        setTimeout(() => {
+                            userRow.style.background = '';
+                        }, 3000);
+                    }
+                }, 100);
+            }
+
+            highlightEvent(eventId) {
+                // Similar highlighting for events
+                setTimeout(() => {
+                    const eventRow = document.querySelector(`[data-event-id="${eventId}"]`);
+                    if (eventRow) {
+                        eventRow.style.background = '#e6f3ff';
+                        setTimeout(() => {
+                            eventRow.style.background = '';
+                        }, 3000);
+                    }
+                }, 100);
+            }
+
+            highlightArticle(articleId) {
+                // Similar highlighting for articles
+                setTimeout(() => {
+                    const articleRow = document.querySelector(`[data-article-id="${articleId}"]`);
+                    if (articleRow) {
+                        articleRow.style.background = '#e6f3ff';
+                        setTimeout(() => {
+                            articleRow.style.background = '';
+                        }, 3000);
+                    }
+                }, 100);
+            }
+
+            // View Management
+            switchView(view) {
+                this.log(`Switching to view: ${view}`);
+
+                // Hide all view contents
+                document.querySelectorAll('.view-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                // Show selected view
+                const viewElement = document.getElementById(`${view}View`);
+                if (viewElement) {
+                    viewElement.classList.add('active');
+                }
+
+                // Update sidebar active state
+                document.querySelectorAll('.sidebar-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                const activeItem = document.querySelector(`[data-view="${view}"]`);
+                if (activeItem) {
+                    activeItem.classList.add('active');
+                }
+
+                this.currentView = view;
+                this.loadViewData(view);
+            }
+
+            loadViewData(view) {
+                switch (view) {
+                    case 'dashboard':
+                        this.loadDashboardData();
+                        break;
+                    case 'students':
+                        this.loadStudentsData();
+                        break;
+                    case 'alumni':
+                        this.loadAlumniData();
+                        break;
+                    case 'events':
+                        this.loadEventsData();
+                        break;
+                    case 'verifications':
+                        this.loadVerificationRequests();
+                        break;
+                    case 'analytics':
+                        this.loadAnalyticsData();
+                        break;
+                    case 'reports':
+                        this.loadReportsData();
+                        break;
+                    case 'settings':
+                        this.loadSettingsData();
+                        break;
+                    case 'articles':
+                        this.loadArticlesData();
+                        break;
+                    case 'questions':
+                        this.loadQuestionsData();
+                        break;
+                }
+            }
+
+            async loadDashboardData() {
+                this.log('Loading dashboard data...');
+                this.updateDashboardStats();
+                this.loadRecentActivities();
+            }
+
+            loadRecentActivities() {
+                const activities = [
+                    {
+                        time: '2 min ago',
+                        activity: 'New student verification',
+                        user: 'John Doe',
+                        avatar: 'JD',
+                        status: 'pending',
+                        actions: ['approve', 'reject']
+                    },
+                    {
+                        time: '5 min ago',
+                        activity: 'Event created',
+                        user: 'Alice Smith',
+                        avatar: 'AS',
+                        status: 'active',
+                        actions: ['view']
+                    },
+                    {
+                        time: '12 min ago',
+                        activity: 'Article published',
+                        user: 'Mike Brown',
+                        avatar: 'MB',
+                        status: 'published',
+                        actions: ['view']
+                    },
+                    {
+                        time: '1 hour ago',
+                        activity: 'Question answered',
+                        user: 'Sarah Wilson',
+                        avatar: 'SW',
+                        status: 'resolved',
+                        actions: ['view']
+                    }
+                ];
+
+                const tbody = document.getElementById('recentActivities');
+                tbody.innerHTML = activities.map(activity => `
+                    <tr>
+                        <td>${activity.time}</td>
+                        <td>${activity.activity}</td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="user-avatar">${activity.avatar}</div>
+                                ${activity.user}
+                            </div>
+                        </td>
+                        <td><span class="status-badge ${activity.status}">${activity.status}</span></td>
+                        <td>
+                            ${activity.actions.map(action =>
+                    `<button class="btn-${action === 'approve' ? 'success' : action === 'reject' ? 'danger' : 'secondary'} btn-sm" onclick="adminDashboard.handleActivity('${action}', '${activity.user}')">${action}</button>`
+                ).join(' ')}
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            handleActivity(action, user) {
+                this.showSuccess(`${action} action performed for ${user}`);
+            }
+
+            async loadStudentsData() {
+                this.log('Loading students data...');
+                const students = JSON.parse(localStorage.getItem('students') || '[]');
+
+                document.getElementById('studentsTotal').textContent = students.length;
+
+                const tbody = document.getElementById('studentsTableBody');
+                tbody.innerHTML = students.map(student => `
+                    <tr data-user-id="${student.id}">
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="user-avatar">${student.initials}</div>
+                                <div>
+                                    <div>${student.name}</div>
+                                    <small style="color: var(--gray-500);">${student.email}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${student.course}</td>
+                        <td>${student.year}${student.year === 1 ? 'st' : student.year === 2 ? 'nd' : student.year === 3 ? 'rd' : 'th'} Year</td>
+                        <td><span class="status-badge ${student.status}">${student.status}</span></td>
+                        <td>${new Date(student.joinedDate).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn-secondary btn-sm" onclick="adminDashboard.editUser('student', '${student.id}')">Edit</button>
+                            <button class="btn-danger btn-sm" onclick="adminDashboard.deleteUser('student', '${student.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            async loadAlumniData() {
+                this.log('Loading alumni data...');
+                const alumni = JSON.parse(localStorage.getItem('alumni') || '[]');
+
+                document.getElementById('alumniTotal').textContent = alumni.length;
+
+                const tbody = document.getElementById('alumniTableBody');
+                tbody.innerHTML = alumni.map(alum => `
+                    <tr data-user-id="${alum.id}">
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="user-avatar">${alum.initials}</div>
+                                <div>
+                                    <div>${alum.name}</div>
+                                    <small style="color: var(--gray-500);">${alum.email}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${alum.course}</td>
+                        <td>${alum.passingYear}</td>
+                        <td>${alum.currentRole || 'Not specified'}</td>
+                        <td><span class="status-badge ${alum.status}">${alum.status}</span></td>
+                        <td>
+                            <button class="btn-secondary btn-sm" onclick="adminDashboard.editUser('alumni', '${alum.id}')">Edit</button>
+                            <button class="btn-danger btn-sm" onclick="adminDashboard.deleteUser('alumni', '${alum.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            async loadEventsData() {
+                this.log('Loading events data...');
+                const events = JSON.parse(localStorage.getItem('events') || '[]');
+
+                document.getElementById('eventsTotal').textContent = events.length;
+
+                const tbody = document.getElementById('eventsTableBody');
+                tbody.innerHTML = events.map(event => `
+                    <tr data-event-id="${event.id}">
+                        <td>
+                            <div>
+                                <div style="font-weight: 600;">${event.title}</div>
+                                <small style="color: var(--gray-500);">${event.description.substring(0, 50)}...</small>
+                            </div>
+                        </td>
+                        <td>${event.host}</td>
+                        <td>${new Date(event.datetime).toLocaleDateString()}</td>
+                        <td>${event.attendees || 0}/${event.maxAttendees}</td>
+                        <td><span class="status-badge ${event.status}">${event.status}</span></td>
+                        <td>
+                            <button class="btn-secondary btn-sm" onclick="adminDashboard.editEvent('${event.id}')">Edit</button>
+                            <button class="btn-danger btn-sm" onclick="adminDashboard.cancelEvent('${event.id}')">Cancel</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            async loadArticlesData() {
+                this.log('Loading articles data...');
+                const articles = JSON.parse(localStorage.getItem('articles') || '[]');
+
+                document.getElementById('articlesTotal').textContent = articles.length;
+
+                const tbody = document.getElementById('articlesTableBody');
+                tbody.innerHTML = articles.map(article => `
+                    <tr data-article-id="${article.id}">
+                        <td>
+                            <div>
+                                <div style="font-weight: 600;">${article.title}</div>
+                                <small style="color: var(--gray-500);">${article.summary}</small>
+                            </div>
+                        </td>
+                        <td>${article.author}</td>
+                        <td>${article.category}</td>
+                        <td><span class="status-badge ${article.status}">${article.status}</span></td>
+                        <td>${new Date(article.publishedDate).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn-secondary btn-sm" onclick="adminDashboard.editArticle('${article.id}')">Edit</button>
+                            <button class="btn-danger btn-sm" onclick="adminDashboard.deleteArticle('${article.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            async loadQuestionsData() {
+                this.log('Loading questions data...');
+                const questions = JSON.parse(localStorage.getItem('questions') || '[]');
+
+                document.getElementById('questionsTotal').textContent = questions.length;
+
+                const tbody = document.getElementById('questionsTableBody');
+                tbody.innerHTML = questions.map(question => `
+                    <tr>
+                        <td>
+                            <div>
+                                <div style="font-weight: 600;">${question.title}</div>
+                                <small style="color: var(--gray-500);">${question.content.substring(0, 80)}...</small>
+                            </div>
+                        </td>
+                        <td>${question.askedBy}</td>
+                        <td>${question.answers || 0}</td>
+                        <td>${question.category}</td>
+                        <td>${new Date(question.postedDate).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn-secondary btn-sm" onclick="adminDashboard.viewQuestion('${question.id}')">View</button>
+                            <button class="btn-danger btn-sm" onclick="adminDashboard.moderateQuestion('${question.id}')">Moderate</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            async loadAnalyticsData() {
+                this.log('Loading analytics data...');
+                this.updateAnalyticsStats();
+                this.loadTopContent();
+            }
+
+            updateAnalyticsStats() {
+                // Simulate analytics data
+                const stats = {
+                    pageViews: 12847,
+                    uniqueVisitors: 3456,
+                    newRegistrations: 189,
+                    avgSessionTime: '4m 32s'
+                };
+
+                document.getElementById('totalPageViews').textContent = stats.pageViews.toLocaleString();
+                document.getElementById('uniqueVisitors').textContent = stats.uniqueVisitors.toLocaleString();
+                document.getElementById('newRegistrations').textContent = stats.newRegistrations;
+                document.getElementById('avgSessionTime').textContent = stats.avgSessionTime;
+            }
+
+            loadTopContent() {
+                const topContent = [
+                    { title: 'Breaking into Tech Industry', type: 'Article', views: 1247, engagement: '87%', performance: 'high' },
+                    { title: 'Career AMA Session', type: 'Event', views: 892, engagement: '92%', performance: 'high' },
+                    { title: 'How to prepare for interviews?', type: 'Question', views: 634, engagement: '78%', performance: 'medium' },
+                    { title: 'Remote Work Guidelines', type: 'Article', views: 521, engagement: '65%', performance: 'medium' },
+                    { title: 'Alumni Networking Event', type: 'Event', views: 445, engagement: '83%', performance: 'high' }
+                ];
+
+                const tbody = document.getElementById('topContentTable');
+                tbody.innerHTML = topContent.map(content => `
+                    <tr>
+                        <td>${content.title}</td>
+                        <td>${content.type}</td>
+                        <td>${content.views}</td>
+                        <td>${content.engagement}</td>
+                        <td><span class="status-badge ${content.performance === 'high' ? 'verified' : 'pending'}">${content.performance}</span></td>
+                    </tr>
+                `).join('');
+            }
+
+            async loadReportsData() {
+                this.log('Loading reports data...');
+                this.loadRecentReports();
+            }
+
+            loadRecentReports() {
+                const recentReports = [
+                    { name: 'Monthly User Activity', type: 'User', generated: '2025-09-14', status: 'completed' },
+                    { name: 'Event Engagement Analysis', type: 'Engagement', generated: '2025-09-13', status: 'completed' },
+                    { name: 'Verification Queue Report', type: 'Verification', generated: '2025-09-12', status: 'completed' },
+                    { name: 'Content Performance Summary', type: 'Content', generated: '2025-09-11', status: 'completed' },
+                    { name: 'System Health Check', type: 'System', generated: '2025-09-10', status: 'completed' }
+                ];
+
+                const tbody = document.getElementById('recentReportsTable');
+                tbody.innerHTML = recentReports.map(report => `
+                    <tr>
+                        <td>${report.name}</td>
+                        <td>${report.type}</td>
+                        <td>${new Date(report.generated).toLocaleDateString()}</td>
+                        <td><span class="status-badge verified">${report.status}</span></td>
+                        <td>
+                            <button class="btn-secondary btn-sm" onclick="adminDashboard.downloadReport('${report.name}')">Download</button>
+                            <button class="btn-primary btn-sm" onclick="adminDashboard.shareReport('${report.name}')">Share</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            async loadSettingsData() {
+                this.log('Loading settings data...');
+                // Settings are already initialized in constructor
+            }
+
+            updateDashboardStats() {
+                const pendingVerifications = JSON.parse(localStorage.getItem('pendingVerifications') || '[]');
+                const verifiedStudents = JSON.parse(localStorage.getItem('verifiedStudents') || '[]');
+                const students = JSON.parse(localStorage.getItem('students') || '[]');
+                const alumni = JSON.parse(localStorage.getItem('alumni') || '[]');
+                const events = JSON.parse(localStorage.getItem('events') || '[]');
+
+                const totalUsers = students.length + alumni.length + pendingVerifications.length;
+                const activeEvents = events.filter(e => e.status === 'active').length;
+
+                // Update dashboard stats
+                document.getElementById('totalUsersCount').textContent = totalUsers;
+                document.getElementById('pendingVerificationsCount').textContent = pendingVerifications.length;
+                document.getElementById('activeEventsCount').textContent = activeEvents;
+
+                // Update sidebar counts
+                this.updatePendingCount(pendingVerifications.length);
+                document.getElementById('studentsCount').textContent = students.length;
+                document.getElementById('alumniCount').textContent = alumni.length;
+                document.getElementById('eventsCount').textContent = events.length;
+            }
+
+            // User Management Functions
+            async handleUserSubmission(e) {
+                e.preventDefault();
+                const btn = e.target.querySelector('button[type="submit"]');
+                this.setLoading(btn, true);
+
+                try {
+                    const formData = new FormData(e.target);
+                    const userData = {
+                        id: 'user_' + Date.now(),
+                        name: formData.get('fullName'),
+                        email: formData.get('email'),
+                        role: formData.get('role'),
+                        course: formData.get('course'),
+                        year: formData.get('year'),
+                        phone: formData.get('phone'),
+                        status: 'verified',
+                        joinedDate: new Date().toISOString(),
+                        initials: this.getInitials(formData.get('fullName'))
+                    };
+
+                    if (userData.role === 'alumni') {
+                        userData.passingYear = userData.year;
+                        delete userData.year;
+                    }
+
+                    // Save to localStorage
+                    const storageKey = userData.role === 'student' ? 'students' : 'alumni';
+                    const existingUsers = JSON.parse(localStorage.getItem(storageKey) || '[]');
+                    existingUsers.push(userData);
+                    localStorage.setItem(storageKey, JSON.stringify(existingUsers));
+
+                    this.showSuccess(`${userData.role} added successfully!`);
+                    this.closeModal('userModal');
+                    e.target.reset();
+
+                    // Refresh current view
+                    if (this.currentView === 'students' || this.currentView === 'alumni') {
+                        this.loadViewData(this.currentView);
+                    }
+                    this.updateDashboardStats();
+
+                } catch (error) {
+                    this.showError('Failed to save user. Please try again.');
+                    console.error('User submission error:', error);
+                } finally {
+                    this.setLoading(btn, false);
+                }
+            }
+
+            async handleEventSubmission(e) {
+                e.preventDefault();
+                const btn = e.target.querySelector('button[type="submit"]');
+                this.setLoading(btn, true);
+
+                try {
+                    const formData = new FormData(e.target);
+                    const eventData = {
+                        id: 'event_' + Date.now(),
+                        title: formData.get('title'),
+                        description: formData.get('description'),
+                        datetime: formData.get('datetime'),
+                        maxAttendees: parseInt(formData.get('maxAttendees')),
+                        host: formData.get('host') || 'Admin',
+                        location: formData.get('location'),
+                        status: 'active',
+                        attendees: 0,
+                        createdDate: new Date().toISOString()
+                    };
+
+                    // Save to localStorage
+                    const existingEvents = JSON.parse(localStorage.getItem('events') || '[]');
+                    existingEvents.push(eventData);
+                    localStorage.setItem('events', JSON.stringify(existingEvents));
+
+                    this.showSuccess('Event created successfully!');
+                    this.closeModal('eventModal');
+                    e.target.reset();
+
+                    // Refresh events view if active
+                    if (this.currentView === 'events') {
+                        this.loadEventsData();
+                    }
+                    this.updateDashboardStats();
+
+                } catch (error) {
+                    this.showError('Failed to create event. Please try again.');
+                    console.error('Event submission error:', error);
+                } finally {
+                    this.setLoading(btn, false);
+                }
+            }
+
+            updateUserForm(role) {
+                const yearLabel = document.getElementById('yearLabel');
+                const yearGroup = document.getElementById('yearGroup');
+
+                if (role === 'alumni') {
+                    yearLabel.textContent = 'Passing Year';
+                    yearGroup.querySelector('input').min = '1980';
+                    yearGroup.querySelector('input').max = '2025';
+                } else {
+                    yearLabel.textContent = 'Current Year';
+                    yearGroup.querySelector('input').min = '1';
+                    yearGroup.querySelector('input').max = '5';
+                }
+            }
+
+            editUser(type, userId) {
+                const users = JSON.parse(localStorage.getItem(type === 'student' ? 'students' : 'alumni') || '[]');
+                const user = users.find(u => u.id === userId);
+
+                if (user) {
+                    // Populate edit form
+                    this.showSuccess(`Edit functionality for ${user.name} will be implemented`);
+                } else {
+                    this.showError('User not found');
+                }
+            }
+
+            deleteUser(type, userId) {
+                if (confirm('Are you sure you want to delete this user?')) {
+                    const storageKey = type === 'student' ? 'students' : 'alumni';
+                    let users = JSON.parse(localStorage.getItem(storageKey) || '[]');
+                    users = users.filter(u => u.id !== userId);
+                    localStorage.setItem(storageKey, JSON.stringify(users));
+
+                    this.showSuccess('User deleted successfully');
+                    this.loadViewData(this.currentView);
+                    this.updateDashboardStats();
+                }
+            }
+
+            editEvent(eventId) {
+                this.showSuccess('Event editing functionality will be implemented');
+            }
+
+            cancelEvent(eventId) {
+                if (confirm('Are you sure you want to cancel this event?')) {
+                    let events = JSON.parse(localStorage.getItem('events') || '[]');
+                    const eventIndex = events.findIndex(e => e.id === eventId);
+                    if (eventIndex !== -1) {
+                        events[eventIndex].status = 'cancelled';
+                        localStorage.setItem('events', JSON.stringify(events));
+                        this.showSuccess('Event cancelled successfully');
+                        this.loadEventsData();
+                    }
+                }
+            }
+
+            // Verification Management
+            async loadVerificationRequests() {
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/admin/verification-requests`, {
+                        headers: this.authHeaders
+                    });
+
+                    if (response.ok) {
+                        const requests = await response.json();
+                        this.renderVerificationRequests(requests);
+                        this.updatePendingCount(requests.length);
+                    }
+                } catch (error) {
+                    // Demo mode - load from localStorage
+                    const pendingRequests = JSON.parse(localStorage.getItem('pendingVerifications') || '[]');
+                    this.renderVerificationRequests(pendingRequests);
+                    this.updatePendingCount(pendingRequests.length);
+                }
+            }
+
+            renderVerificationRequests(requests) {
+                const container = document.getElementById('verificationContainer');
+
+                if (requests.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: var(--gray-500); padding: 40px;">No pending verification requests</p>';
+                    return;
+                }
+
+                const html = requests.map(request => `
+                    <div class="verification-card">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                            <div>
+                                <h3 style="color: var(--gray-900); margin-bottom: 5px;">${request.fullName}</h3>
+                                <p style="color: var(--gray-600); font-size: 0.9rem;">${request.course} - ${request.branch}</p>
+                                <p style="color: var(--gray-500); font-size: 0.85rem;">${request.collegeName}</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <span class="status-badge pending">Pending Review</span>
+                                <p style="color: var(--gray-500); font-size: 0.8rem; margin-top: 5px;">
+                                    Submitted: ${new Date(request.submittedAt).toLocaleDateString()}
+                                </p>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-primary btn-sm" onclick="adminDashboard.viewVerificationDetails('${request.id}')">
+                                <i class="fas fa-eye"></i>
+                                Review Details
+                            </button>
+                            <button class="btn-success btn-sm" onclick="adminDashboard.quickApprove('${request.id}')">
+                                <i class="fas fa-check"></i>
+                                Quick Approve
+                            </button>
+                            <button class="btn-danger btn-sm" onclick="adminDashboard.showRejectModal('${request.id}')">
+                                <i class="fas fa-times"></i>
+                                Reject
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                container.container.innerHTML = html;
+            }
+
+            viewVerificationDetails(requestId) {
+                const requests = JSON.parse(localStorage.getItem('pendingVerifications') || '[]');
+                const request = requests.find(r => r.id === requestId);
+
+                if (!request) {
+                    this.showError('Verification request not found');
+                    return;
+                }
+
+                this.currentVerification = request;
+
+                const detailsHTML = `
+                    <div style="background: var(--gray-50); border-radius: var(--radius-lg); padding: 20px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div><strong>Full Name:</strong><br>${request.fullName}</div>
+                            <div><strong>Enrollment No:</strong><br>${request.enrollmentNo}</div>
+                            <div><strong>Course:</strong><br>${request.course}</div>
+                            <div><strong>Branch:</strong><br>${request.branch}</div>
+                            <div><strong>Current Year:</strong><br>${request.currentYear}</div>
+                            <div><strong>College Email:</strong><br>${request.collegeEmail}</div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <strong>College/University:</strong><br>${request.collegeName}
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <strong>Submitted:</strong><br>${new Date(request.submittedAt).toLocaleString()}
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('verificationDetails').innerHTML = detailsHTML;
+                document.getElementById('verificationModal').classList.remove('hidden');
+            }
+
+            async quickApprove(requestId) {
+                const requests = JSON.parse(localStorage.getItem('pendingVerifications') || '[]');
+                const request = requests.find(r => r.id === requestId);
+
+                if (!request) {
+                    this.showError('Verification request not found');
+                    return;
+                }
+
+                this.currentVerification = request;
+                await this.approveVerification();
+            }
+
+            async approveVerification() {
+                if (!this.currentVerification) return;
+
+                const btn = document.getElementById('approveBtn');
+                this.setLoading(btn, true);
+
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/admin/verify-student`, {
+                        method: 'POST',
+                        headers: this.authHeaders,
+                        body: JSON.stringify({
+                            studentId: this.currentVerification.studentId,
+                            action: 'approve'
+                        })
+                    });
+
+                    if (response.ok) {
+                        this.showSuccess('Student verification approved successfully!');
+                    }
+                } catch (error) {
+                    // Demo mode
+                    this.moveToVerified(this.currentVerification, 'approved');
+                    this.showSuccess('Student verification approved! (Demo mode)');
+                }
+
+                this.closeModal('verificationModal');
+                this.loadVerificationRequests();
+                this.updateDashboardStats();
+                this.currentVerification = null;
+                this.setLoading(btn, false);
+            }
+
+            showRejectModal(requestId = null) {
+                if (requestId) {
+                    const requests = JSON.parse(localStorage.getItem('pendingVerifications') || '[]');
+                    this.currentVerification = requests.find(r => r.id === requestId);
+                }
+
+                document.getElementById('rejectionModal').classList.remove('hidden');
+            }
+
+            async rejectVerification() {
+                const reason = document.getElementById('rejectionReason').value.trim();
+                if (!reason) {
+                    this.showError('Please provide a reason for rejection');
+                    return;
+                }
+
+                if (!this.currentVerification) return;
+
+                const btn = document.querySelector('#rejectionModal .btn-danger');
+                this.setLoading(btn, true);
+
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/admin/verify-student`, {
+                        method: 'POST',
+                        headers: this.authHeaders,
+                        body: JSON.stringify({
+                            studentId: this.currentVerification.studentId,
+                            action: 'reject',
+                            reason: reason
+                        })
+                    });
+
+                    if (response.ok) {
+                        this.showSuccess('Student verification rejected.');
+                    }
+                } catch (error) {
+                    // Demo mode
+                    this.moveToVerified(this.currentVerification, 'rejected', reason);
+                    this.showSuccess('Student verification rejected! (Demo mode)');
+                }
+
+                this.closeModal('rejectionModal');
+                this.closeModal('verificationModal');
+                this.loadVerificationRequests();
+                this.updateDashboardStats();
+                this.currentVerification = null;
+
+                // Clear the rejection reason
+                document.getElementById('rejectionReason').value = '';
+                this.setLoading(btn, false);
+            }
+
+            moveToVerified(verification, status, reason = '') {
+                // Remove from pending
+                let pending = JSON.parse(localStorage.getItem('pendingVerifications') || '[]');
+                pending = pending.filter(v => v.id !== verification.id);
+                localStorage.setItem('pendingVerifications', JSON.stringify(pending));
+
+                // Add to verified/rejected list
+                const verified = JSON.parse(localStorage.getItem('verifiedStudents') || '[]');
+                verified.push({
+                    ...verification,
+                    verifiedAt: new Date().toISOString(),
+                    status: status,
+                    reason: reason
+                });
+                localStorage.setItem('verifiedStudents', JSON.stringify(verified));
+
+                // Update student status
+                localStorage.setItem('currentStudentVerificationStatus', status);
+                if (reason) {
+                    localStorage.setItem('verificationRejectionReason', reason);
+                }
+            }
+
+            updatePendingCount(count) {
+                const badge = document.getElementById('verificationCount');
+                if (badge) {
+                    badge.textContent = count;
+                    badge.style.display = count > 0 ? 'inline' : 'none';
+                }
+
+                const pendingCountElement = document.getElementById('pendingCount');
+                if (pendingCountElement) {
+                    pendingCountElement.textContent = count;
+                }
+            }
+
+            refreshVerifications() {
+                this.loadVerificationRequests();
+                this.updateDashboardStats();
+            }
+
+            // Settings Management
+            toggleSetting(toggle, settingKey) {
+                toggle.classList.toggle('active');
+                this.settings[settingKey] = toggle.classList.contains('active');
+                this.log(`Setting ${settingKey} changed to ${this.settings[settingKey]}`);
+            }
+
+            saveAllSettings() {
+                // Get all form values
+                this.settings.platformName = document.getElementById('platformName').value;
+                this.settings.sessionTimeout = parseInt(document.getElementById('sessionTimeout').value);
+                this.settings.loginAttemptLimit = parseInt(document.getElementById('loginAttemptLimit').value);
+                this.settings.fileUploadLimit = parseInt(document.getElementById('fileUploadLimit').value);
+
+                // Save to localStorage
+                localStorage.setItem('adminSettings', JSON.stringify(this.settings));
+                this.showSuccess('Settings saved successfully!');
+            }
+
+            backupSettings() {
+                const settingsBackup = {
+                    settings: this.settings,
+                    timestamp: new Date().toISOString(),
+                    version: '1.0'
+                };
+
+                const dataStr = JSON.stringify(settingsBackup, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(dataBlob);
+                link.download = `realm-settings-backup-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+
+                this.showSuccess('Settings backup downloaded!');
+            }
+
+            // Analytics Functions
+            updateAnalytics(timeframe) {
+                this.log(`Updating analytics for timeframe: ${timeframe}`);
+                // In a real implementation, this would fetch data based on timeframe
+                this.updateAnalyticsStats();
+            }
+
+            exportAnalytics() {
+                const analyticsData = {
+                    timeframe: document.getElementById('analyticsTimeframe').value,
+                    pageViews: document.getElementById('totalPageViews').textContent,
+                    uniqueVisitors: document.getElementById('uniqueVisitors').textContent,
+                    newRegistrations: document.getElementById('newRegistrations').textContent,
+                    avgSessionTime: document.getElementById('avgSessionTime').textContent,
+                    exportedAt: new Date().toISOString()
+                };
+
+                const dataStr = JSON.stringify(analyticsData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(dataBlob);
+                link.download = `realm-analytics-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+
+                this.showSuccess('Analytics data exported!');
+            }
+
+            // Reports Functions
+            generateReport(type) {
+                this.showSuccess(`Generating ${type} report...`);
+
+                // Simulate report generation
+                setTimeout(() => {
+                    const reportData = {
+                        type: type,
+                        generated: new Date().toISOString(),
+                        data: this.getReportData(type)
+                    };
+
+                    const dataStr = JSON.stringify(reportData, null, 2);
+                    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(dataBlob);
+                    link.download = `${type}-report-${new Date().toISOString().split('T')[0]}.json`;
+                    link.click();
+
+                    this.showSuccess(`${type} report generated and downloaded!`);
+                }, 1000);
+            }
+
+            getReportData(type) {
+                switch (type) {
+                    case 'user':
+                        return {
+                            totalUsers: JSON.parse(localStorage.getItem('students') || '[]').length + JSON.parse(localStorage.getItem('alumni') || '[]').length,
+                            newRegistrations: 89,
+                            verificationsPending: JSON.parse(localStorage.getItem('pendingVerifications') || '[]').length
+                        };
+                    case 'engagement':
+                        return {
+                            eventParticipation: '78%',
+                            articleViews: 12847,
+                            questionAnswers: 456
+                        };
+                    case 'verification':
+                        return {
+                            pending: JSON.parse(localStorage.getItem('pendingVerifications') || '[]').length,
+                            approved: JSON.parse(localStorage.getItem('verifiedStudents') || '[]').filter(v => v.status === 'approved').length,
+                            rejected: JSON.parse(localStorage.getItem('verifiedStudents') || '[]').filter(v => v.status === 'rejected').length
+                        };
+                    case 'content':
+                        return {
+                            totalArticles: JSON.parse(localStorage.getItem('articles') || '[]').length,
+                            totalEvents: JSON.parse(localStorage.getItem('events') || '[]').length,
+                            totalQuestions: JSON.parse(localStorage.getItem('questions') || '[]').length
+                        };
+                    case 'system':
+                        return {
+                            uptime: '99.9%',
+                            avgResponseTime: '1.2s',
+                            errorRate: '0.1%'
+                        };
+                    case 'financial':
+                        return {
+                            revenue: '$12,450',
+                            expenses: '$8,230',
+                            profit: '$4,220'
+                        };
+                    default:
+                        return {};
+                }
+            }
+
+            scheduleReport() {
+                this.showSuccess('Report scheduling functionality will be implemented');
+            }
+
+            generateCustomReport() {
+                this.showSuccess('Custom report builder will be implemented');
+            }
+
+            downloadReport(reportName) {
+                this.showSuccess(`Downloading ${reportName}...`);
+            }
+
+            shareReport(reportName) {
+                this.showSuccess(`Sharing ${reportName}...`);
+            }
+
+            viewAllReports() {
+                this.showSuccess('View all reports functionality will be implemented');
+            }
+
+            // Dashboard Functions
+            exportReport() {
+                const dashboardData = {
+                    totalUsers: document.getElementById('totalUsersCount').textContent,
+                    pendingVerifications: document.getElementById('pendingVerificationsCount').textContent,
+                    activeEvents: document.getElementById('activeEventsCount').textContent,
+                    systemUptime: document.getElementById('systemUptime').textContent,
+                    exportedAt: new Date().toISOString()
+                };
+
+                const dataStr = JSON.stringify(dashboardData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(dataBlob);
+                link.download = `realm-dashboard-report-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+
+                this.showSuccess('Dashboard report exported!');
+            }
+
+            showQuickActions() {
+                const actions = [
+                    'Add New User',
+                    'Create Event',
+                    'Approve Verifications',
+                    'Send Announcement',
+                    'Generate Report'
+                ];
+
+                const actionsList = actions.map(action =>
+                    `<div style="padding: 10px; border-bottom: 1px solid var(--gray-200); cursor: pointer;" onclick="adminDashboard.executeQuickAction('${action}')">${action}</div>`
+                ).join('');
+
+                const modal = document.createElement('div');
+                modal.className = 'modal-overlay';
+                modal.innerHTML = `
+                    <div class="modal-content" style="max-width: 400px;">
+                        <div class="modal-header">
+                            <h2 class="modal-title">Quick Actions</h2>
+                            <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">&times;</button>
+                        </div>
+                        <div>${actionsList}</div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+
+            executeQuickAction(action) {
+                document.querySelector('.modal-overlay:last-child').remove();
+
+                switch (action) {
+                    case 'Add New User':
+                        openUserModal('student');
+                        break;
+                    case 'Create Event':
+                        openEventModal();
+                        break;
+                    case 'Approve Verifications':
+                        this.switchView('verifications');
+                        break;
+                    case 'Send Announcement':
+                        this.showSuccess('Announcement system will be implemented');
+                        break;
+                    case 'Generate Report':
+                        this.switchView('reports');
+                        break;
+                }
+            }
+
+            refreshSystemHealth() {
+                this.showSuccess('Refreshing system health...');
+
+                // Simulate refresh
+                setTimeout(() => {
+                    document.getElementById('systemUptime').textContent = (99.9 + Math.random() * 0.1).toFixed(1) + '%';
+                    document.getElementById('avgResponse').textContent = (1.0 + Math.random() * 0.5).toFixed(1) + 's';
+                    document.getElementById('storageUsed').textContent = (40 + Math.random() * 20).toFixed(0) + 'GB';
+                    this.showSuccess('System health updated!');
+                }, 500);
+            }
+
+            // Filter and Export Functions
+            filterStudents() {
+                this.showSuccess('Student filtering will be implemented');
+            }
+
+            exportStudents() {
+                const students = JSON.parse(localStorage.getItem('students') || '[]');
+                const dataStr = JSON.stringify(students, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(dataBlob);
+                link.download = `students-export-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+
+                this.showSuccess('Students data exported!');
+            }
+
+            filterAlumni() {
+                this.showSuccess('Alumni filtering will be implemented');
+            }
+
+            exportAlumni() {
+                const alumni = JSON.parse(localStorage.getItem('alumni') || '[]');
+                const dataStr = JSON.stringify(alumni, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(dataBlob);
+                link.download = `alumni-export-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+
+                this.showSuccess('Alumni data exported!');
+            }
+
+            exportEvents() {
+                const events = JSON.parse(localStorage.getItem('events') || '[]');
+                const dataStr = JSON.stringify(events, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(dataBlob);
+                link.download = `events-export-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+
+                this.showSuccess('Events data exported!');
+            }
+
+            filterArticles() {
+                this.showSuccess('Article filtering will be implemented');
+            }
+
+            createArticle() {
+                this.showSuccess('Article creation will be implemented');
+            }
+
+            exportArticles() {
+                const articles = JSON.parse(localStorage.getItem('articles') || '[]');
+                const dataStr = JSON.stringify(articles, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(dataBlob);
+                link.download = `articles-export-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+
+                this.showSuccess('Articles data exported!');
+            }
+
+            editArticle(articleId) {
+                this.showSuccess('Article editing will be implemented');
+            }
+
+            deleteArticle(articleId) {
+                if (confirm('Are you sure you want to delete this article?')) {
+                    let articles = JSON.parse(localStorage.getItem('articles') || '[]');
+                    articles = articles.filter(a => a.id !== articleId);
+                    localStorage.setItem('articles', JSON.stringify(articles));
+
+                    this.showSuccess('Article deleted successfully');
+                    this.loadArticlesData();
+                }
+            }
+
+            moderateQuestions() {
+                this.showSuccess('Question moderation panel will be implemented');
+            }
+
+            exportQuestions() {
+                const questions = JSON.parse(localStorage.getItem('questions') || '[]');
+                const dataStr = JSON.stringify(questions, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(dataBlob);
+                link.download = `questions-export-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+
+                this.showSuccess('Questions data exported!');
+            }
+
+            viewQuestion(questionId) {
+                this.showSuccess('Question viewer will be implemented');
+            }
+
+            moderateQuestion(questionId) {
+                this.showSuccess('Question moderation will be implemented');
+            }
+
+            // Utility Functions
+            performSearch(query) {
+                if (!query || query.trim().length < 2) {
+                    this.hideSearchResults();
+                    return;
+                }
+
+                const searchResults = this.binarySearch(query.toLowerCase());
+                this.displaySearchResults(searchResults);
+            }
+
+            toggleProfileDropdown() {
+                const dropdown = document.getElementById('profileDropdown');
+                if (dropdown) {
+                    dropdown.classList.toggle('show');
+                    this.log('Profile dropdown toggled');
+                }
+            }
+
+            closeProfileDropdown() {
+                const dropdown = document.getElementById('profileDropdown');
+                if (dropdown) {
+                    dropdown.classList.remove('show');
+                }
+            }
+
+            closeModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.add('hidden');
+                    // Reset any loading states
+                    modal.querySelectorAll('.btn-primary, .btn-success, .btn-danger').forEach(btn => {
+                        this.setLoading(btn, false);
+                    });
+                }
+            }
+
+            setLoading(button, loading) {
+                if (!button) return;
+
+                const spinner = button.querySelector('.spinner');
+                const text = button.querySelector('.btn-text') || button;
+
+                if (loading) {
+                    button.disabled = true;
+                    button.classList.add('loading');
+                    if (spinner) spinner.style.display = 'inline-block';
+                    if (text !== button) text.style.opacity = '0.7';
+                } else {
+                    button.disabled = false;
+                    button.classList.remove('loading');
+                    if (spinner) spinner.style.display = 'none';
+                    if (text !== button) text.style.opacity = '1';
+                }
+            }
+
+            showSuccess(message) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: var(--success);
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: var(--radius-md);
+                    z-index: 2000;
+                    box-shadow: var(--shadow-lg);
+                    font-weight: 500;
+                    max-width: 300px;
+                `;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 5000);
+            }
+
+            showError(message) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: var(--error);
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: var(--radius-md);
+                    z-index: 2000;
+                    box-shadow: var(--shadow-lg);
+                    font-weight: 500;
+                    max-width: 300px;
+                `;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 5000);
+            }
+
+            getInitials(name) {
+                return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            }
+
+            loadSampleData() {
+                // Load sample data if not exists
+                if (!localStorage.getItem('students')) {
+                    const sampleStudents = [
+                        {
+                            id: 'student_1',
+                            name: 'John Doe',
+                            email: 'john.doe@college.edu',
+                            role: 'student',
+                            course: 'B.Tech Computer Science',
+                            year: 3,
+                            phone: '+91-9876543210',
+                            status: 'verified',
+                            joinedDate: '2024-01-15T00:00:00.000Z',
+                            initials: 'JD'
+                        },
+                        {
+                            id: 'student_2',
+                            name: 'Alice Smith',
+                            email: 'alice.smith@college.edu',
+                            role: 'student',
+                            course: 'B.Tech Information Technology',
+                            year: 2,
+                            phone: '+91-9876543211',
+                            status: 'pending',
+                            joinedDate: '2024-03-22T00:00:00.000Z',
+                            initials: 'AS'
+                        }
+                    ];
+                    localStorage.setItem('students', JSON.stringify(sampleStudents));
+                }
+
+                if (!localStorage.getItem('alumni')) {
+                    const sampleAlumni = [
+                        {
+                            id: 'alumni_1',
+                            name: 'Mike Brown',
+                            email: 'mike.brown@company.com',
+                            role: 'alumni',
+                            course: 'B.Tech Computer Science',
+                            passingYear: 2020,
+                            currentRole: 'Senior Software Engineer',
+                            phone: '+91-9876543212',
+                            status: 'verified',
+                            joinedDate: '2020-06-15T00:00:00.000Z',
+                            initials: 'MB'
+                        },
+                        {
+                            id: 'alumni_2',
+                            name: 'Sarah Johnson',
+                            email: 'sarah.johnson@startup.com',
+                            role: 'alumni',
+                            course: 'MBA Finance',
+                            passingYear: 2019,
+                            currentRole: 'Product Manager',
+                            phone: '+91-9876543213',
+                            status: 'verified',
+                            joinedDate: '2019-05-20T00:00:00.000Z',
+                            initials: 'SJ'
+                        }
+                    ];
+                    localStorage.setItem('alumni', JSON.stringify(sampleAlumni));
+                }
+
+                if (!localStorage.getItem('events')) {
+                    const sampleEvents = [
+                        {
+                            id: 'event_1',
+                            title: 'Tech Career AMA',
+                            description: 'Q&A session about tech careers with industry experts',
+                            datetime: '2025-09-15T18:00:00',
+                            maxAttendees: 50,
+                            host: 'Mike Brown',
+                            location: 'Virtual - Zoom',
+                            status: 'active',
+                            attendees: 45,
+                            createdDate: '2025-09-10T00:00:00.000Z'
+                        },
+                        {
+                            id: 'event_2',
+                            title: 'Resume Workshop',
+                            description: 'How to build a winning resume that gets you hired',
+                            datetime: '2025-09-18T17:00:00',
+                            maxAttendees: 30,
+                            host: 'Sarah Johnson',
+                            location: 'Conference Hall A',
+                            status: 'active',
+                            attendees: 23,
+                            createdDate: '2025-09-12T00:00:00.000Z'
+                        }
+                    ];
+                    localStorage.setItem('events', JSON.stringify(sampleEvents));
+                }
+
+                if (!localStorage.getItem('articles')) {
+                    const sampleArticles = [
+                        {
+                            id: 'article_1',
+                            title: 'Breaking into Tech Industry',
+                            summary: 'Complete guide for students wanting to start their tech career',
+                            author: 'Mike Brown',
+                            category: 'Career',
+                            status: 'published',
+                            publishedDate: '2025-09-10T00:00:00.000Z'
+                        },
+                        {
+                            id: 'article_2',
+                            title: 'Remote Work Best Practices',
+                            summary: 'Essential tips for productive remote work',
+                            author: 'Sarah Johnson',
+                            category: 'Productivity',
+                            status: 'published',
+                            publishedDate: '2025-09-08T00:00:00.000Z'
+                        }
+                    ];
+                    localStorage.setItem('articles', JSON.stringify(sampleArticles));
+                }
+
+                if (!localStorage.getItem('questions')) {
+                    const sampleQuestions = [
+                        {
+                            id: 'question_1',
+                            title: 'How to prepare for technical interviews?',
+                            content: 'I have a technical interview coming up next week. What are some good resources and strategies?',
+                            askedBy: 'John Doe',
+                            answers: 5,
+                            category: 'Career',
+                            postedDate: '2025-09-14T00:00:00.000Z'
+                        },
+                        {
+                            id: 'question_2',
+                            title: 'Best programming languages to learn in 2025?',
+                            content: 'As a beginner, which programming languages should I focus on learning first?',
+                            askedBy: 'Alice Smith',
+                            answers: 8,
+                            category: 'Technology',
+                            postedDate: '2025-09-13T00:00:00.000Z'
+                        }
+                    ];
+                    localStorage.setItem('questions', JSON.stringify(sampleQuestions));
+                }
+            }
+
+            logout() {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('userId');
+                this.log('Admin logged out, redirecting...');
+                window.location.href = './REALM7.html';
+            }
+        }
+
+        // Global variable to store the admin dashboard instance
+        let adminDashboard;
+
+        // Global functions for modal and user management
+        function openUserModal(type) {
+            const modal = document.getElementById('userModal');
+            const title = document.getElementById('userModalTitle');
+            const roleSelect = document.getElementById('userRole');
+
+            if (type === 'student') {
+                title.textContent = 'Add Student';
+                roleSelect.value = 'student';
+                adminDashboard.updateUserForm('student');
+            } else if (type === 'alumni') {
+                title.textContent = 'Add Alumni';
+                roleSelect.value = 'alumni';
+                adminDashboard.updateUserForm('alumni');
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function openEventModal() {
+            const modal = document.getElementById('eventModal');
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            adminDashboard.closeModal(modalId);
+        }
+
+        function editUser(type, userId) {
+            adminDashboard.editUser(type, userId);
+        }
+
+        // Demo function to add sample verification data (for testing)
+        function addSampleVerifications() {
+            const sampleVerifications = [
+                {
+                    id: 'v' + Date.now(),
+                    studentId: 'student_' + Date.now(),
+                    fullName: 'John Doe',
+                    course: 'B.Tech',
+                    branch: 'Computer Science',
+                    currentYear: 3,
+                    enrollmentNo: '2022CSE001',
+                    collegeName: 'Sample University',
+                    collegeEmail: 'john.doe@sample.edu',
+                    submittedAt: new Date().toISOString()
+                },
+                {
+                    id: 'v' + (Date.now() + 1),
+                    studentId: 'student_' + (Date.now() + 1),
+                    fullName: 'Jane Smith',
+                    course: 'B.Tech',
+                    branch: 'Information Technology',
+                    currentYear: 2,
+                    enrollmentNo: '2023IT001',
+                    collegeName: 'Tech Institute',
+                    collegeEmail: 'jane.smith@tech.edu',
+                    submittedAt: new Date().toISOString()
+                }
+            ];
+
+            localStorage.setItem('pendingVerifications', JSON.stringify(sampleVerifications));
+            adminDashboard.updateDashboardStats();
+            adminDashboard.showSuccess('Sample verification requests added! Click on Verifications in the sidebar to view them.');
+        }
+
+        // Initialize admin dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, initializing Admin Dashboard...');
+            try {
+                adminDashboard = new AdminDashboard();
+            } catch (error) {
+                console.error('Failed to initialize admin dashboard:', error);
+            }
+        });
+
+        // Add demo button for testing (only in development)
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            window.addEventListener('load', () => {
+                const demoButton = document.createElement('button');
+                demoButton.textContent = 'Add Sample Verifications';
+                demoButton.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: var(--accent-blue);
+                    color: white;
+                    padding: 10px 15px;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    z-index: 1000;
+                    font-size: 0.9rem;
+                    font-weight: 500;
+                `;
+                demoButton.onclick = addSampleVerifications;
+                document.body.appendChild(demoButton);
+            });
+        }
+    </script>
+</body>
+
+</html>
