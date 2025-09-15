@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Dashboard - Realm</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Professional Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Enhanced Color Palette - Matching Student Dashboard */
+        :root {
+            --primary-dark: #13293D;
+            --primary-blue: #006494;
+            --accent-blue: #247BA0;
+            --bright-blue: #1B98E0;
+            --light-bg: #E8F1F2;
+
+            --white: #FFFFFF;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E1;
+            --gray-400: #94A3B8;
+            --gray-500: #64748B;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1E293B;
+            --gray-900: #0F172A;
+
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light-bg);
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        /* Header - Matching Student Dashboard */
+        .header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0 20px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        .logo .realm-first {
+            color: #1B98E0;
+        }
+
+        .logo .realm-second {
+            color: var(--primary-dark);
+        }
+
+        .search-container {
+            position: relative;
+            width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 45px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            font-size: 0.9rem;
+            background: var(--gray-50);
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(36, 123, 160, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, var(--accent-blue), var(--bright-blue));
+            color: var(--white);
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: var(--gray-600);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+        }
+
+        .notification-btn:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: var(--error);
+            color: var(--white);
+            font-size: 0.7rem;
+            padding: 2px 5px;
+            border-radius: 10px;
+            min-width: 16px;
+            text-align: center;
+        }
+
+        .notification-badge.hidden {
+            display: none;
+        }
+
+        /* Notification Panel */
+        .notification-panel {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            min-width: 380px;
+            max-height: 400px;
+            z-index: 200;
+            margin-top: 8px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .notification-panel.show {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--gray-50);
+        }
+
+        .notification-header h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .mark-all-read {
+            font-size: 0.85rem;
+            color: var(--accent-blue);
+            cursor: pointer;
+        }
+
+        .notification-list {
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .notification-item:hover {
+            background: var(--gray-50);
+        }
+
+        .notification-item.unread {
+            background: rgba(36, 123, 160, 0.05);
+        }
+
+        .notification-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.info {
+            background: rgba(36, 123, 160, 0.15);
+            color: var(--accent-blue);
+        }
+
+        .notification-icon.success {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .notification-icon.warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .notification-icon.error {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--error);
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--gray-900);
+            margin-bottom: 2px;
+        }
+
+        .notification-message {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            line-height: 1.4;
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+
+        .notification-empty {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--gray-500);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--bright-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            min-width: 220px;
+            z-index: 200;
+            margin-top: 8px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .profile-dropdown.show {
+            display: block;
+        }
+
+        .dropdown-header {
+            padding: 18px;
+            border-bottom: 1px solid var(--gray-200);
+            background: var(--gray-50);
+        }
+
+        .dropdown-name {
+            font-weight: 600;
+            color: var(--gray-900);
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+
+        .dropdown-email {
+            color: var(--gray-600);
+            font-size: 0.8rem;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            color: var(--gray-700);
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .dropdown-item i {
+            font-size: 1rem;
+            width: 18px;
+            text-align: center;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--gray-200);
+            margin: 8px 0;
+        }
+
+        /* Sidebar - Matching Student Dashboard */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 250px;
+            height: calc(100vh - 70px);
+            background: var(--white);
+            border-right: 1px solid var(--gray-200);
+            padding: 20px 0;
+            overflow-y: auto;
+            z-index: 50;
+            transition: var(--transition);
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--gray-600);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .sidebar-item:hover {
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .sidebar-item.active {
+            background: rgba(36, 123, 160, 0.1);
+            color: var(--accent-blue);
+            border-left-color: var(--accent-blue);
+        }
+
+        .sidebar-item i {
+            font-size: 1.1rem;
+            width: 22px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 25px;
+            min-height: calc(100vh - 70px);
+            transition: var(--transition);
+        }
+
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Enhanced Components */
+        .content-section {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        /* Buttons - Matching Student Dashboard */
+        .btn-primary,
+        .btn-secondary,
+        .btn-success,
+        .btn-danger,
+        .btn-warning {
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--bright-blue));
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 2px solid var(--gray-200);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+            border-color: var(--gray-300);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Status badges */
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-badge.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info);
+        }
+
+        .status-badge.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .status-badge.cancelled {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        .status-badge.verified {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        /* Time slots */
+        .slot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            background: var(--white);
+            transition: var(--transition);
+            margin-bottom: 15px;
+        }
+
+        .slot:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .slot.booked {
+            background: rgba(239, 68, 68, 0.06);
+            border-color: var(--error);
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 14px 14px;
+            border-bottom: 1px solid var(--gray-200);
+            text-align: left;
+        }
+
+        th {
+            background: var(--gray-50);
+            color: var(--gray-700);
+            font-size: 0.8rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        tr:hover td {
+            background: var(--gray-50);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-overlay.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 30px;
+            width: 90vw;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--gray-700);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(36, 123, 160, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            background: var(--success);
+            color: #fff;
+            padding: 15px 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            font-weight: 500;
+            animation: toastIn 0.3s ease-out;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stats Display */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .search-container {
+                width: 200px;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header - Matching Student Dashboard -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <span class="realm-first">REA</span><span class="realm-second">LM</span>
+            </div>
+
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search students, events, questions..."
+                    id="globalSearch">
+                <button class="search-btn" id="searchBtn">Search</button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="notification-btn" id="notificationBtn" title="Notifications">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" id="notificationBadge">3</span>
+
+                <!-- Notification Panel -->
+                <div class="notification-panel" id="notificationPanel">
+                    <div class="notification-header">
+                        <h3>Notifications</h3>
+                        <span class="mark-all-read" id="markAllRead">Mark all read</span>
+                    </div>
+                    <div class="notification-list" id="notificationList">
+                        <!-- Notifications populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-avatar" id="profileAvatar">
+                <span id="avatarInitials">AL</span>
+
+                <!-- Profile Dropdown -->
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-name" id="dropdownName">Alumni User</div>
+                        <div class="dropdown-email" id="dropdownEmail">alumni@example.com</div>
+                    </div>
+
+                    <div class="dropdown-item" id="editProfileBtn">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Edit Profile</span>
+                    </div>
+
+                    <div class="dropdown-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </div>
+
+                    <div class="dropdown-divider"></div>
+
+                    <div class="dropdown-item" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar - Matching Student Dashboard Style -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-item active" data-page="dashboard">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </div>
+
+        <div class="sidebar-item" data-page="office-hours">
+            <i class="fas fa-calendar-check"></i>
+            <span>Office Hours</span>
+        </div>
+
+        <div class="sidebar-item" data-page="events">
+            <i class="fas fa-calendar-plus"></i>
+            <span>My Events</span>
+        </div>
+
+        <div class="sidebar-item" data-page="qa-board">
+            <i class="fas fa-question-circle"></i>
+            <span>Q&A Board</span>
+        </div>
+
+        <div class="sidebar-item" data-page="articles">
+            <i class="fas fa-newspaper"></i>
+            <span>My Articles</span>
+        </div>
+
+        <div class="sidebar-item" data-page="requests">
+            <i class="fas fa-envelope"></i>
+            <span>Student Requests</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard -->
+        <div class="page-content active" id="dashboard">
+            <div class="page-header">
+                <h1 class="page-title">Alumni Dashboard</h1>
+                <div class="page-actions">
+                    <button class="btn-secondary" id="headerOpenProfile">
+                        <i class="fas fa-user"></i>
+                        My Profile
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                    <p style="margin-top: 8px; color: var(--gray-600);">Create events, set office hours, write articles</p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-primary" onclick="openModal('eventModal')">
+                            <i class="fas fa-plus"></i>
+                            New Event
+                        </button>
+                        <button class="btn-secondary" onclick="openModal('officeHoursModal')">
+                            <i class="fas fa-calendar-plus"></i>
+                            Office Hours
+                        </button>
+                        <button class="btn-secondary" onclick="openModal('articleModal')">
+                            <i class="fas fa-pen"></i>
+                            Article
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-chart-line"></i> This Month</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Students Helped</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Events Hosted</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">28</div>
+                            <div class="stat-label">Questions Answered</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-users"></i> Community Impact</h3>
+                    <p style="margin-top: 8px; color: var(--gray-600);">Your contribution to the student community</p>
+                    <div style="margin-top: 15px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <i class="fas fa-star" style="color: var(--warning);"></i>
+                            <span>Top Mentor Recognition</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <i class="fas fa-trophy" style="color: var(--success);"></i>
+                            <span>Community Leader</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-heart" style="color: var(--error);"></i>
+                            <span>95% Positive Feedback</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Activities</h2>
+                    <button class="btn-secondary">View All</button>
+                </div>
+                <div id="recentActivity">
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid var(--gray-200);">
+                        <div style="width: 40px; height: 40px; background: var(--success); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 500;">Created "Tech Career AMA" event</div>
+                            <div style="font-size: 0.85rem; color: var(--gray-600);">2 hours ago</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid var(--gray-200);">
+                        <div style="width: 40px; height: 40px; background: var(--info); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-question"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 500;">Answered 3 student questions</div>
+                            <div style="font-size: 0.85rem; color: var(--gray-600);">1 day ago</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px;">
+                        <div style="width: 40px; height: 40px; background: var(--accent-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 500;">Added new office hours slot</div>
+                            <div style="font-size: 0.85rem; color: var(--gray-600);">3 days ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Office Hours -->
+        <div class="page-content" id="office-hours">
+            <div class="page-header">
+                <h1 class="page-title">Office Hours</h1>
+                <div class="page-actions">
+                    <button class="btn-primary" onclick="openModal('officeHoursModal')">
+                        <i class="fas fa-plus"></i>
+                        Add Time Slot
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Your Availability</h2>
+                </div>
+                <div id="timeSlotsList">
+                    <div class="slot">
+                        <div>
+                            <strong>Monday, 2:00 PM - 4:00 PM</strong>
+                            <div style="color: var(--gray-600); font-size: 0.92rem;">Career Guidance & Resume Review</div>
+                        </div>
+                        <div>
+                            <span class="status-badge active">Available</span>
+                            <button class="btn-secondary" style="margin-left: 10px;">Edit</button>
+                        </div>
+                    </div>
+
+                    <div class="slot booked">
+                        <div>
+                            <strong>Wednesday, 10:00 AM - 12:00 PM</strong>
+                            <div style="color: var(--gray-600); font-size: 0.92rem;">Technical Interview Prep</div>
+                        </div>
+                        <div>
+                            <span class="status-badge pending">Booked - John Doe</span>
+                            <button class="btn-secondary" style="margin-left: 10px;">View</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Upcoming Sessions</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Student</th>
+                            <th>Topic</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="upcomingSessionsList">
+                        <tr>
+                            <td>Wed, Sep 15 - 10:00 AM</td>
+                            <td>John Doe</td>
+                            <td>Technical Interview Prep</td>
+                            <td><span class="status-badge active">Confirmed</span></td>
+                            <td><button class="btn-secondary">View Details</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Events -->
+        <div class="page-content" id="events">
+            <div class="page-header">
+                <h1 class="page-title">My Events</h1>
+                <div class="page-actions">
+                    <button class="btn-primary" onclick="openModal('eventModal')">
+                        <i class="fas fa-plus"></i>
+                        Create Event
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-grid" id="eventsList">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                        <div>
+                            <h3>Tech Career AMA</h3>
+                            <p style="color: var(--gray-600); margin-top: 4px;">Sep 20, 2025 - 3:00 PM</p>
+                        </div>
+                        <span class="status-badge active">Active</span>
+                    </div>
+                    <p>Interactive Q&A session about breaking into tech industry</p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-secondary">Edit</button>
+                        <button class="btn-danger">Cancel</button>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.92rem; color: var(--gray-600);">
+                        <i class="fas fa-users"></i> 25 registered
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                        <div>
+                            <h3>Resume Workshop</h3>
+                            <p style="color: var(--gray-600); margin-top: 4px;">Oct 5, 2025 - 2:00 PM</p>
+                        </div>
+                        <span class="status-badge pending">Draft</span>
+                    </div>
+                    <p>Learn how to craft a winning resume for tech roles</p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-primary">Publish</button>
+                        <button class="btn-secondary">Edit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q&A Board -->
+        <div class="page-content" id="qa-board">
+            <div class="page-header">
+                <h1 class="page-title">Q&A Board</h1>
+                <div class="page-actions">
+                    <button class="btn-primary">
+                        <i class="fas fa-reply"></i>
+                        Answer Questions
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Questions</h2>
+                </div>
+
+                <div id="questionsList">
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                            <div>
+                                <h4>How to prepare for technical interviews?</h4>
+                                <p style="color: var(--gray-600); font-size: 0.92rem;">Asked by John Doe - Computer Science</p>
+                            </div>
+                            <span class="status-badge pending">Unanswered</span>
+                        </div>
+                        <p style="margin: 10px 0;">I have interviews coming up at tech companies. What's the best way to prepare for coding interviews and system design questions?</p>
+                        <div style="margin-top: 15px;">
+                            <button class="btn-primary">Answer</button>
+                            <span style="margin-left: 15px; color: var(--gray-600); font-size: 0.92rem;">
+                                <i class="fas fa-eye"></i> 23 views
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                            <div>
+                                <h4>Career switch from non-tech to tech?</h4>
+                                <p style="color: var(--gray-600); font-size: 0.92rem;">Asked by Sarah Smith - Business Administration</p>
+                            </div>
+                            <span class="status-badge active">Answered</span>
+                        </div>
+                        <p style="margin: 10px 0;">I'm currently in marketing but want to transition to tech. What skills should I focus on?</p>
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--gray-200);">
+                            <strong>Your Answer:</strong>
+                            <p style="margin: 6px 0; color: var(--gray-700);">Start with learning programming fundamentals. Python is a great beginner language...</p>
+                            <button class="btn-secondary">Edit Answer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Articles -->
+        <div class="page-content" id="articles">
+            <div class="page-header">
+                <h1 class="page-title">My Articles</h1>
+                <div class="page-actions">
+                    <button class="btn-primary" onclick="openModal('articleModal')">
+                        <i class="fas fa-pen"></i>
+                        Write Article
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-grid" id="articlesList">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                        <div>
+                            <h3>Breaking into Tech: A Complete Guide</h3>
+                            <p style="color: var(--gray-600); margin-top: 4px;">Published 3 days ago</p>
+                        </div>
+                        <span class="status-badge active">Published</span>
+                    </div>
+                    <p>Everything you need to know about starting your career in technology...</p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-secondary">Edit</button>
+                        <button class="btn-danger">Unpublish</button>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.92rem; color: var(--gray-600);">
+                        <i class="fas fa-eye"></i> 156 views • <i class="fas fa-heart"></i> 23 likes
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                        <div>
+                            <h3>Remote Work Best Practices</h3>
+                            <p style="color: var(--gray-600); margin-top: 4px;">Draft saved 1 hour ago</p>
+                        </div>
+                        <span class="status-badge pending">Draft</span>
+                    </div>
+                    <p>Tips and strategies for being productive while working remotely...</p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-primary">Publish</button>
+                        <button class="btn-secondary">Edit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Requests -->
+        <div class="page-content" id="requests">
+            <div class="page-header">
+                <h1 class="page-title">Student Requests</h1>
+                <div class="page-actions">
+                    <button class="btn-secondary">
+                        <i class="fas fa-filter"></i>
+                        Filter
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Pending Requests</h2>
+                </div>
+
+                <div id="requestsList">
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                            <div>
+                                <h4>Mentorship Request</h4>
+                                <p style="color: var(--gray-600);">From: John Doe - Computer Science, 3rd Year</p>
+                                <p style="color: var(--gray-600); font-size: 0.92rem;">Requested 2 hours ago</p>
+                            </div>
+                            <span class="status-badge pending">Pending</span>
+                        </div>
+                        <p><strong>Message:</strong> Hi! I'm interested in pursuing a career in software engineering and would love to get guidance on interview preparation and career planning.</p>
+                        <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button class="btn-success">Accept</button>
+                            <button class="btn-danger">Decline</button>
+                            <button class="btn-secondary">View Profile</button>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                            <div>
+                                <h4>Office Hours Booking</h4>
+                                <p style="color: var(--gray-600);">From: Sarah Johnson - Information Technology, 2nd Year</p>
+                                <p style="color: var(--gray-600); font-size: 0.92rem;">For: Wednesday, 10:00 AM - 12:00 PM</p>
+                            </div>
+                            <span class="status-badge active">Confirmed</span>
+                        </div>
+                        <p><strong>Topic:</strong> Resume review and career advice for internship applications</p>
+                        <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button class="btn-secondary">View Details</button>
+                            <button class="btn-secondary">Reschedule</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <div class="modal-overlay hidden" id="officeHoursModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add Office Hours</h2>
+                <button class="modal-close" onclick="closeModal('officeHoursModal')">&times;</button>
+            </div>
+            <form id="officeHoursForm">
+                <div class="form-group">
+                    <label class="form-label">Day of Week</label>
+                    <select class="form-select" name="day" required>
+                        <option value="">Select Day</option>
+                        <option value="monday">Monday</option>
+                        <option value="tuesday">Tuesday</option>
+                        <option value="wednesday">Wednesday</option>
+                        <option value="thursday">Thursday</option>
+                        <option value="friday">Friday</option>
+                        <option value="saturday">Saturday</option>
+                        <option value="sunday">Sunday</option>
+                    </select>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label class="form-label">Start Time</label>
+                        <input type="time" class="form-input" name="startTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">End Time</label>
+                        <input type="time" class="form-input" name="endTime" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Topic/Focus Area</label>
+                    <input type="text" class="form-input" name="topic" placeholder="e.g., Career Guidance, Resume Review" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Additional Notes</label>
+                    <textarea class="form-textarea" name="notes" placeholder="Any additional information for students..."></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn-secondary" onclick="closeModal('officeHoursModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Time Slot</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="eventModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create Event</h2>
+                <button class="modal-close" onclick="closeModal('eventModal')">&times;</button>
+            </div>
+            <form id="eventForm">
+                <div class="form-group">
+                    <label class="form-label">Event Title</label>
+                    <input type="text" class="form-input" name="title" placeholder="e.g., Tech Career AMA" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" name="description" placeholder="Describe your event..." required></textarea>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-input" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Time</label>
+                        <input type="time" class="form-input" name="time" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Event Type</label>
+                    <select class="form-select" name="type" required>
+                        <option value="">Select Type</option>
+                        <option value="workshop">Workshop</option>
+                        <option value="ama">Ask Me Anything</option>
+                        <option value="webinar">Webinar</option>
+                        <option value="networking">Networking</option>
+                        <option value="panel">Panel Discussion</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Max Attendees</label>
+                    <input type="number" class="form-input" name="maxAttendees" min="1" max="500" placeholder="50">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn-secondary" onclick="closeModal('eventModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="articleModal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Write Article</h2>
+                <button class="modal-close" onclick="closeModal('articleModal')">&times;</button>
+            </div>
+            <form id="articleForm">
+                <div class="form-group">
+                    <label class="form-label">Article Title</label>
+                    <input type="text" class="form-input" name="title" placeholder="e.g., Breaking into Tech Industry" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="career">Career Advice</option>
+                        <option value="technical">Technical</option>
+                        <option value="industry">Industry Insights</option>
+                        <option value="personal">Personal Experience</option>
+                        <option value="tips">Tips & Tricks</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Content</label>
+                    <textarea class="form-textarea" name="content" style="min-height: 250px;" placeholder="Write your article content here..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tags (comma-separated)</label>
+                    <input type="text" class="form-input" name="tags" placeholder="e.g., career, technology, programming">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn-secondary" onclick="closeModal('articleModal')">Save Draft</button>
+                    <button type="submit" class="btn-primary">Publish Article</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        class AlumniDashboard {
+            constructor() {
+                this.currentPage = 'dashboard';
+                this.apiBaseUrl = '/api';
+                this.userData = null;
+                this.notifications = [];
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.bindNotifications();
+                this.loadUserData();
+                this.loadNotifications();
+                this.loadDashboardData();
+            }
+
+            bindEvents() {
+                // Sidebar navigation
+                document.querySelectorAll('.sidebar-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        const page = item.getAttribute('data-page');
+                        this.navigateToPage(page);
+                    });
+                });
+
+                // Profile dropdown
+                document.getElementById('profileAvatar').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggleProfileDropdown();
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', () => {
+                    this.closeProfileDropdown();
+                });
+
+                // Form submissions
+                document.getElementById('officeHoursForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleOfficeHoursSubmission(e);
+                });
+
+                document.getElementById('eventForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleEventSubmission(e);
+                });
+
+                document.getElementById('articleForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleArticleSubmission(e);
+                });
+
+                // Search functionality
+                document.getElementById('searchBtn').addEventListener('click', () => {
+                    this.performSearch();
+                });
+
+                // Logout
+                document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.logout();
+                });
+
+                // Global click handler for closing modals
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('modal-overlay')) {
+                        this.closeAllModals();
+                    }
+                });
+
+                // ESC key handler
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeAllModals();
+                        this.closeNotificationPanel();
+                        this.closeProfileDropdown();
+                    }
+                });
+            }
+
+            // Notification System
+            bindNotifications() {
+                const notifBtn = document.getElementById('notificationBtn');
+                const notifPanel = document.getElementById('notificationPanel');
+                const markAllRead = document.getElementById('markAllRead');
+
+                notifBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggleNotificationPanel();
+                });
+
+                markAllRead.addEventListener('click', () => {
+                    this.markAllNotificationsRead();
+                });
+
+                // Close notification panel when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!notifBtn.contains(e.target) && !notifPanel.contains(e.target)) {
+                        this.closeNotificationPanel();
+                    }
+                });
+            }
+
+            loadNotifications() {
+                // Demo notifications
+                this.notifications = [
+                    {
+                        id: 1,
+                        type: 'info',
+                        title: 'New mentorship request',
+                        message: 'John Doe wants to connect with you for career guidance',
+                        time: '2 minutes ago',
+                        read: false
+                    },
+                    {
+                        id: 2,
+                        type: 'success',
+                        title: 'Event published successfully',
+                        message: 'Your "Tech Career AMA" event is now live',
+                        time: '1 hour ago',
+                        read: false
+                    },
+                    {
+                        id: 3,
+                        type: 'warning',
+                        title: 'Office hours reminder',
+                        message: 'You have a session with Sarah Johnson tomorrow at 10 AM',
+                        time: '3 hours ago',
+                        read: true
+                    }
+                ];
+                this.renderNotifications();
+                this.updateNotificationBadge();
+            }
+
+            renderNotifications() {
+                const list = document.getElementById('notificationList');
+
+                if (this.notifications.length === 0) {
+                    list.innerHTML = '<div class="notification-empty">No notifications yet</div>';
+                    return;
+                }
+
+                list.innerHTML = this.notifications.map(notif => `
+                    <div class="notification-item ${!notif.read ? 'unread' : ''}" onclick="dashboard.handleNotificationClick(${notif.id})">
+                        <div class="notification-icon ${notif.type}">
+                            <i class="fas fa-${this.getNotificationIcon(notif.type)}"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">${notif.title}</div>
+                            <div class="notification-message">${notif.message}</div>
+                            <div class="notification-time">${notif.time}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            getNotificationIcon(type) {
+                const icons = {
+                    info: 'info-circle',
+                    success: 'check-circle',
+                    warning: 'exclamation-triangle',
+                    error: 'times-circle'
+                };
+                return icons[type] || 'bell';
+            }
+
+            toggleNotificationPanel() {
+                const panel = document.getElementById('notificationPanel');
+                const isVisible = panel.classList.contains('show');
+
+                if (isVisible) {
+                    this.closeNotificationPanel();
+                } else {
+                    this.closeProfileDropdown();
+                    panel.classList.add('show');
+                }
+            }
+
+            closeNotificationPanel() {
+                document.getElementById('notificationPanel').classList.remove('show');
+            }
+
+            handleNotificationClick(notifId) {
+                // Mark as read
+                const notif = this.notifications.find(n => n.id === notifId);
+                if (notif && !notif.read) {
+                    notif.read = true;
+                    this.renderNotifications();
+                    this.updateNotificationBadge();
+                }
+
+                this.closeNotificationPanel();
+                this.toast('Notification opened');
+            }
+
+            markAllNotificationsRead() {
+                this.notifications.forEach(notif => notif.read = true);
+                this.renderNotifications();
+                this.updateNotificationBadge();
+                this.toast('All notifications marked as read');
+            }
+
+            updateNotificationBadge() {
+                const badge = document.getElementById('notificationBadge');
+                const unreadCount = this.notifications.filter(n => !n.read).length;
+
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+
+            addNotification(type, title, message) {
+                const newNotif = {
+                    id: Date.now(),
+                    type,
+                    title,
+                    message,
+                    time: 'Just now',
+                    read: false
+                };
+                this.notifications.unshift(newNotif);
+                this.renderNotifications();
+                this.updateNotificationBadge();
+            }
+
+            // Navigation
+            navigateToPage(page) {
+                // Hide all pages
+                document.querySelectorAll('.page-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                // Show selected page
+                document.getElementById(page).classList.add('active');
+
+                // Update sidebar active state
+                document.querySelectorAll('.sidebar-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                document.querySelector(`[data-page="${page}"]`).classList.add('active');
+
+                this.currentPage = page;
+                this.loadPageData(page);
+            }
+
+            loadPageData(page) {
+                switch (page) {
+                    case 'office-hours':
+                        this.loadOfficeHours();
+                        break;
+                    case 'events':
+                        this.loadEvents();
+                        break;
+                    case 'qa-board':
+                        this.loadQABoard();
+                        break;
+                    case 'articles':
+                        this.loadArticles();
+                        break;
+                    case 'requests':
+                        this.loadRequests();
+                        break;
+                }
+            }
+
+            // Data Loading Methods
+            async loadUserData() {
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/alumni/profile`, {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        const userData = await response.json();
+                        this.userData = userData;
+                        this.updateUserUI(userData);
+                    }
+                } catch (error) {
+                    console.log('Using dummy data for demo');
+                    this.userData = {
+                        firstName: 'Alumni',
+                        lastName: 'User',
+                        email: 'alumni.user@example.com'
+                    };
+                    this.updateUserUI(this.userData);
+                }
+            }
+
+            loadDashboardData() {
+                // Load dashboard statistics
+                console.log('Loading dashboard data...');
+            }
+
+            async loadOfficeHours() {
+                console.log('Loading office hours...');
+            }
+
+            async loadEvents() {
+                console.log('Loading events...');
+            }
+
+            async loadQABoard() {
+                console.log('Loading Q&A board...');
+            }
+
+            async loadArticles() {
+                console.log('Loading articles...');
+            }
+
+            async loadRequests() {
+                console.log('Loading student requests...');
+            }
+
+            // Form Handlers
+            async handleOfficeHoursSubmission(e) {
+                const formData = new FormData(e.target);
+                const data = {
+                    day: formData.get('day'),
+                    startTime: formData.get('startTime'),
+                    endTime: formData.get('endTime'),
+                    topic: formData.get('topic'),
+                    notes: formData.get('notes')
+                };
+
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/alumni/office-hours`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        this.toast('Office hours added successfully!');
+                        this.addNotification('success', 'Office Hours Added', `New ${data.topic} slot created for ${data.day}`);
+                        this.closeModal('officeHoursModal');
+                        this.loadOfficeHours();
+                    }
+                } catch (error) {
+                    this.toast('Office hours added! (Demo mode)');
+                    this.addNotification('success', 'Office Hours Added', `New ${data.topic} slot created for ${data.day}`);
+                    this.closeModal('officeHoursModal');
+                }
+
+                e.target.reset();
+            }
+
+            async handleEventSubmission(e) {
+                const formData = new FormData(e.target);
+                const data = {
+                    title: formData.get('title'),
+                    description: formData.get('description'),
+                    date: formData.get('date'),
+                    time: formData.get('time'),
+                    type: formData.get('type'),
+                    maxAttendees: formData.get('maxAttendees') ? parseInt(formData.get('maxAttendees')) : null
+                };
+
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/events`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        this.toast('Event created successfully!');
+                        this.addNotification('success', 'Event Created', `"${data.title}" event has been created`);
+                        this.closeModal('eventModal');
+                        this.loadEvents();
+                    }
+                } catch (error) {
+                    this.toast('Event created! (Demo mode)');
+                    this.addNotification('success', 'Event Created', `"${data.title}" event has been created`);
+                    this.closeModal('eventModal');
+                }
+
+                e.target.reset();
+            }
+
+            async handleArticleSubmission(e) {
+                const formData = new FormData(e.target);
+                const data = {
+                    title: formData.get('title'),
+                    category: formData.get('category'),
+                    content: formData.get('content'),
+                    tags: formData.get('tags') ? formData.get('tags').split(',').map(t => t.trim()).filter(Boolean) : []
+                };
+
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/articles`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        this.toast('Article published successfully!');
+                        this.addNotification('success', 'Article Published', `"${data.title}" has been published`);
+                        this.closeModal('articleModal');
+                        this.loadArticles();
+                    }
+                } catch (error) {
+                    this.toast('Article published! (Demo mode)');
+                    this.addNotification('success', 'Article Published', `"${data.title}" has been published`);
+                    this.closeModal('articleModal');
+                }
+
+                e.target.reset();
+            }
+
+            // Utility Methods
+            updateUserUI(userData) {
+                if (userData) {
+                    const initials = `${userData.firstName?.charAt(0) || ''}${userData.lastName?.charAt(0) || ''}`;
+                    document.getElementById('avatarInitials').textContent = initials;
+                    document.getElementById('dropdownName').textContent = `${userData.firstName} ${userData.lastName}`;
+                    document.getElementById('dropdownEmail').textContent = userData.email;
+                }
+            }
+
+            performSearch() {
+                const query = document.getElementById('globalSearch').value.trim();
+                if (!query) return;
+
+                console.log('Searching for:', query);
+                this.toast(`Search functionality will be implemented for: "${query}"`);
+            }
+
+            toggleProfileDropdown() {
+                const dropdown = document.getElementById('profileDropdown');
+                dropdown.classList.toggle('show');
+            }
+
+            closeProfileDropdown() {
+                const dropdown = document.getElementById('profileDropdown');
+                dropdown.classList.remove('show');
+            }
+
+            toast(message) {
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-check-circle"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 5000);
+            }
+
+            closeModal(modalId) {
+                document.getElementById(modalId).classList.add('hidden');
+            }
+
+            closeAllModals() {
+                document.querySelectorAll('.modal-overlay').forEach(modal => {
+                    modal.classList.add('hidden');
+                });
+            }
+
+            logout() {
+                if (confirm('Are you sure you want to logout?')) {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userRole');
+                    localStorage.removeItem('userId');
+                    window.location.href = './login.html';
+                }
+            }
+        }
+
+        // Global functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Global dashboard instance
+        let dashboard;
+
+        // Initialize dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            dashboard = new AlumniDashboard();
+        });
+    </script>
+</body>
+
+</html>
