@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Realm</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Professional Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Enhanced Color Palette */
+        :root {
+            --primary-dark: #13293D;
+            --primary-blue: #006494;
+            --accent-blue: #247BA0;
+            --bright-blue: #1B98E0;
+            --light-bg: #E8F1F2;
+
+            --white: #FFFFFF;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E1;
+            --gray-400: #94A3B8;
+            --gray-500: #64748B;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1E293B;
+            --gray-900: #0F172A;
+
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light-bg);
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0 20px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        .logo .realm-first {
+            color: #1B98E0;
+        }
+
+        .logo .realm-second {
+            color: var(--primary-dark);
+        }
+
+        .search-container {
+            position: relative;
+            width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 45px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            font-size: 0.9rem;
+            background: var(--gray-50);
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(36, 123, 160, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, var(--accent-blue), var(--bright-blue));
+            color: var(--white);
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: var(--gray-600);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+        }
+
+        .notification-btn:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: var(--error);
+            color: var(--white);
+            font-size: 0.7rem;
+            padding: 2px 5px;
+            border-radius: 10px;
+            min-width: 16px;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--bright-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            min-width: 220px;
+            z-index: 200;
+            margin-top: 8px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .profile-dropdown.show {
+            display: block;
+        }
+
+        .dropdown-header {
+            padding: 18px;
+            border-bottom: 1px solid var(--gray-200);
+            background: var(--gray-50);
+        }
+
+        .dropdown-name {
+            font-weight: 600;
+            color: var(--gray-900);
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+
+        .dropdown-email {
+            color: var(--gray-600);
+            font-size: 0.8rem;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            color: var(--gray-700);
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .dropdown-item i {
+            font-size: 1rem;
+            width: 18px;
+            text-align: center;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--gray-200);
+            margin: 8px 0;
+        }
+
+        /* Sidebar - Student focused */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 250px;
+            height: calc(100vh - 70px);
+            background: var(--white);
+            border-right: 1px solid var(--gray-200);
+            padding: 20px 0;
+            overflow-y: auto;
+            z-index: 50;
+            transition: var(--transition);
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--gray-600);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .sidebar-item:hover {
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .sidebar-item.active {
+            background: rgba(36, 123, 160, 0.1);
+            color: var(--accent-blue);
+            border-left-color: var(--accent-blue);
+        }
+
+        .sidebar-item i {
+            font-size: 1.1rem;
+            width: 22px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 25px;
+            min-height: calc(100vh - 70px);
+            transition: var(--transition);
+        }
+
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Enhanced Components */
+        .content-section {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        /* Buttons */
+        .btn-primary,
+        .btn-secondary,
+        .btn-success,
+        .btn-danger,
+        .btn-warning {
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--bright-blue));
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 2px solid var(--gray-200);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+            border-color: var(--gray-300);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Alumni Profile Card */
+        .alumni-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            margin-bottom: 15px;
+            transition: var(--transition);
+        }
+
+        .alumni-profile:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .alumni-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--bright-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        /* Filter bar */
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(36, 123, 160, 0.1);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(36, 123, 160, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Status badges */
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-badge.registered {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge.available {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info);
+        }
+
+        .status-badge.full {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        .status-badge.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .status-badge.verified {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-overlay.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 30px;
+            width: 90vw;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--gray-700);
+        }
+
+        /* Loading spinner */
+        .loading-spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid var(--white);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        .btn.loading .loading-spinner {
+            display: block;
+        }
+
+        .btn.loading .btn-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Stats Display */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .search-container {
+                width: 200px;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <span class="realm-first">REA</span><span class="realm-second">LM</span>
+            </div>
+
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search alumni, events, articles..."
+                    id="globalSearch">
+                <button class="search-btn" id="searchBtn">Search</button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button class="notification-btn" title="Notifications">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">2</span>
+            </button>
+
+            <div class="profile-avatar" id="profileAvatar">
+                <span id="avatarInitials">ST</span>
+
+                <!-- Profile Dropdown -->
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-name" id="dropdownName">Student User</div>
+                        <div class="dropdown-email" id="dropdownEmail">student@example.com</div>
+                    </div>
+
+                    <div class="dropdown-item" id="editProfileBtn">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Edit Profile</span>
+                    </div>
+
+                    <div class="dropdown-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </div>
+
+                    <div class="dropdown-divider"></div>
+
+                    <div class="dropdown-item" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-item active" data-page="dashboard">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </div>
+
+        <div class="sidebar-item" data-page="alumni-network">
+            <i class="fas fa-users"></i>
+            <span>Alumni Network</span>
+        </div>
+
+        <div class="sidebar-item" data-page="events">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Events</span>
+        </div>
+
+        <div class="sidebar-item" data-page="mentorship">
+            <i class="fas fa-handshake"></i>
+            <span>Mentorship</span>
+        </div>
+
+        <div class="sidebar-item" data-page="articles">
+            <i class="fas fa-newspaper"></i>
+            <span>Articles</span>
+        </div>
+
+        <div class="sidebar-item" data-page="qa-board">
+            <i class="fas fa-question-circle"></i>
+            <span>Q&A Board</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Page -->
+        <div class="page-content active" id="dashboard">
+            <div class="page-header">
+                <h1 class="page-title">Student Dashboard</h1>
+                <div class="page-actions">
+                    <button class="btn-secondary">
+                        <i class="fas fa-user"></i>
+                        My Profile
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3><i class="fas fa-chart-line"></i> Your Progress</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="mentorshipCount">3</div>
+                            <div class="stat-label">Mentorship Sessions</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="eventsCount">8</div>
+                            <div class="stat-label">Events Registered</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="questionsCount">12</div>
+                            <div class="stat-label">Questions Asked</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-trophy"></i> Achievements</h3>
+                    <div style="margin-top: 15px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <i class="fas fa-medal" style="color: #F59E0B;"></i>
+                            <span>Active Community Member</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <i class="fas fa-star" style="color: #10B981;"></i>
+                            <span>Top Question Contributor</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-handshake" style="color: #3B82F6;"></i>
+                            <span>Mentorship Participant</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Quick Actions</h2>
+                </div>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4><i class="fas fa-users"></i> Connect with Alumni</h4>
+                        <p>Browse verified alumni profiles and connect with professionals in your field.</p>
+                        <button class="btn-primary" style="margin-top: 15px;" onclick="navigateToPage('alumni-network')">
+                            <i class="fas fa-arrow-right"></i>
+                            Browse Alumni
+                        </button>
+                    </div>
+                    <div class="card">
+                        <h4><i class="fas fa-calendar"></i> Join Events</h4>
+                        <p>Participate in workshops, webinars, and networking events hosted by alumni.</p>
+                        <button class="btn-primary" style="margin-top: 15px;" onclick="navigateToPage('events')">
+                            <i class="fas fa-arrow-right"></i>
+                            View Events
+                        </button>
+                    </div>
+                    <div class="card">
+                        <h4><i class="fas fa-question"></i> Ask Questions</h4>
+                        <p>Get answers from experienced alumni on career, academics, and industry insights.</p>
+                        <button class="btn-primary" style="margin-top: 15px;" onclick="navigateToPage('qa-board')">
+                            <i class="fas fa-arrow-right"></i>
+                            Q&A Board
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Activity</h2>
+                </div>
+                <div id="recentActivity">
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid var(--gray-200);">
+                        <div style="width: 40px; height: 40px; background: var(--success); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 500;">Registered for Tech Career AMA</div>
+                            <div style="font-size: 0.85rem; color: var(--gray-600);">2 hours ago</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid var(--gray-200);">
+                        <div style="width: 40px; height: 40px; background: var(--info); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-question"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 500;">Asked about interview preparation</div>
+                            <div style="font-size: 0.85rem; color: var(--gray-600);">1 day ago</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px;">
+                        <div style="width: 40px; height: 40px; background: var(--accent-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 500;">Connected with John Doe</div>
+                            <div style="font-size: 0.85rem; color: var(--gray-600);">3 days ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alumni Network Page -->
+        <div class="page-content" id="alumni-network">
+            <div class="page-header">
+                <h1 class="page-title">Alumni Network</h1>
+                <div class="page-actions">
+                    <button class="btn-secondary">
+                        <i class="fas fa-filter"></i>
+                        Advanced Filters
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <label class="filter-label">Company</label>
+                    <select class="filter-select" id="companyFilter">
+                        <option value="">All Companies</option>
+                        <option value="google">Google</option>
+                        <option value="microsoft">Microsoft</option>
+                        <option value="amazon">Amazon</option>
+                        <option value="meta">Meta</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Industry</label>
+                    <select class="filter-select" id="industryFilter">
+                        <option value="">All Industries</option>
+                        <option value="tech">Technology</option>
+                        <option value="finance">Finance</option>
+                        <option value="consulting">Consulting</option>
+                        <option value="startup">Startup</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Experience</label>
+                    <select class="filter-select" id="experienceFilter">
+                        <option value="">All Levels</option>
+                        <option value="0-2">0-2 years</option>
+                        <option value="3-5">3-5 years</option>
+                        <option value="5+">5+ years</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Course</label>
+                    <select class="filter-select" id="courseFilter">
+                        <option value="">All Courses</option>
+                        <option value="btech">B.Tech</option>
+                        <option value="mtech">M.Tech</option>
+                        <option value="mba">MBA</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Alumni Profiles</h2>
+                    <button class="btn-secondary">Export List</button>
+                </div>
+
+                <div id="alumniList">
+                    <div class="alumni-profile">
+                        <div class="alumni-avatar">JD</div>
+                        <div style="flex: 1;">
+                            <h4>John Doe</h4>
+                            <p style="color: var(--gray-600); margin: 5px 0;">Senior Software Engineer at Google</p>
+                            <p style="font-size: 0.9rem; color: var(--gray-600);">B.Tech Computer Science • 2020 • 4 years experience</p>
+                            <div style="margin-top: 10px;">
+                                <span style="background: var(--gray-100); padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; margin-right: 5px;">JavaScript</span>
+                                <span style="background: var(--gray-100); padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; margin-right: 5px;">React</span>
+                                <span style="background: var(--gray-100); padding: 3px 8px; border-radius: 12px; font-size: 0.8rem;">System Design</span>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn-primary">Connect</button>
+                            <button class="btn-secondary" style="margin-left: 10px;">View Profile</button>
+                        </div>
+                    </div>
+
+                    <div class="alumni-profile">
+                        <div class="alumni-avatar">SM</div>
+                        <div style="flex: 1;">
+                            <h4>Sarah Miller</h4>
+                            <p style="color: var(--gray-600); margin: 5px 0;">Product Manager at Microsoft</p>
+                            <p style="font-size: 0.9rem; color: var(--gray-600);">MBA • 2019 • 5 years experience</p>
+                            <div style="margin-top: 10px;">
+                                <span style="background: var(--gray-100); padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; margin-right: 5px;">Product Strategy</span>
+                                <span style="background: var(--gray-100); padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; margin-right: 5px;">Data Analysis</span>
+                                <span style="background: var(--gray-100); padding: 3px 8px; border-radius: 12px; font-size: 0.8rem;">Leadership</span>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn-primary">Connect</button>
+                            <button class="btn-secondary" style="margin-left: 10px;">View Profile</button>
+                        </div>
+                    </div>
+
+                    <div class="alumni-profile">
+                        <div class="alumni-avatar">AB</div>
+                        <div style="flex: 1;">
+                            <h4>Alex Brown</h4>
+                            <p style="color: var(--gray-600); margin: 5px 0;">Data Scientist at Amazon</p>
+                            <p style="font-size: 0.9rem; color: var(--gray-600);">M.Tech Data Science • 2021 • 3 years experience</p>
+                            <div style="margin-top: 10px;">
+                                <span style="background: var(--gray-100); padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; margin-right: 5px;">Python</span>
+                                <span style="background: var(--gray-100); padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; margin-right: 5px;">Machine Learning</span>
+                                <span style="background: var(--gray-100); padding: 3px 8px; border-radius: 12px; font-size: 0.8rem;">Analytics</span>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn-primary">Connect</button>
+                            <button class="btn-secondary" style="margin-left: 10px;">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Events Page -->
+        <div class="page-content" id="events">
+            <div class="page-header">
+                <h1 class="page-title">Events</h1>
+                <div class="page-actions">
+                    <button class="btn-secondary">
+                        <i class="fas fa-calendar"></i>
+                        Calendar View
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-grid" id="eventsList">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                        <div>
+                            <h3>Tech Career AMA</h3>
+                            <p style="color: var(--gray-600); margin: 5px 0;">Sep 20, 2025 - 3:00 PM</p>
+                            <p style="color: var(--gray-600); font-size: 0.9rem;">Hosted by John Doe</p>
+                        </div>
+                        <span class="status-badge available">Available</span>
+                    </div>
+                    <p>Interactive Q&A session about breaking into tech industry</p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <button class="btn-primary">Register</button>
+                        <button class="btn-secondary">View Details</button>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.9rem; color: var(--gray-600);">
+                        <i class="fas fa-users"></i> 25/50 registered
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                        <div>
+                            <h3>Resume Workshop</h3>
+                            <p style="color: var(--gray-600); margin: 5px 0;">Oct 5, 2025 - 2:00 PM</p>
+                            <p style="color: var(--gray-600); font-size: 0.9rem;">Hosted by Sarah Miller</p>
+                        </div>
+                        <span class="status-badge available">Available</span>
+                    </div>
+                    <p>Learn how to craft a winning resume for tech roles</p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <button class="btn-primary">Register</button>
+                        <button class="btn-secondary">View Details</button>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.9rem; color: var(--gray-600);">
+                        <i class="fas fa-users"></i> 18/30 registered
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                        <div>
+                            <h3>Data Science Bootcamp</h3>
+                            <p style="color: var(--gray-600); margin: 5px 0;">Oct 12, 2025 - 10:00 AM</p>
+                            <p style="color: var(--gray-600); font-size: 0.9rem;">Hosted by Alex Brown</p>
+                        </div>
+                        <span class="status-badge registered">Registered</span>
+                    </div>
+                    <p>Comprehensive introduction to data science and machine learning</p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <button class="btn-secondary">View Details</button>
+                        <button class="btn-danger">Cancel Registration</button>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.9rem; color: var(--gray-600);">
+                        <i class="fas fa-users"></i> 42/45 registered
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mentorship Page -->
+        <div class="page-content" id="mentorship">
+            <div class="page-header">
+                <h1 class="page-title">Mentorship</h1>
+                <div class="page-actions">
+                    <button class="btn-primary" onclick="openModal('mentorshipModal')">
+                        <i class="fas fa-plus"></i>
+                        Request Mentorship
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">My Mentorship Sessions</h2>
+                </div>
+                <div class="card-grid">
+                    <div class="card">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                            <div class="alumni-avatar" style="width: 50px; height: 50px;">JD</div>
+                            <div>
+                                <h4>John Doe</h4>
+                                <p style="color: var(--gray-600); font-size: 0.9rem;">Senior Software Engineer at Google</p>
+                            </div>
+                        </div>
+                        <p style="margin-bottom: 15px;"><strong>Focus:</strong> Interview Preparation, System Design</p>
+                        <p style="margin-bottom: 15px;"><strong>Next Session:</strong> Sep 22, 2025 - 4:00 PM</p>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-primary">Join Session</button>
+                            <button class="btn-secondary">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Available Mentors</h2>
+                </div>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                            <div class="alumni-avatar" style="width: 50px; height: 50px;">SM</div>
+                            <div>
+                                <h4>Sarah Miller</h4>
+                                <p style="color: var(--gray-600); font-size: 0.9rem;">Product Manager at Microsoft</p>
+                            </div>
+                        </div>
+                        <p style="margin-bottom: 15px;">Specializes in: Product Strategy, Leadership, Data Analysis</p>
+                        <button class="btn-primary">Request Mentorship</button>
+                    </div>
+
+                    <div class="card">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                            <div class="alumni-avatar" style="width: 50px; height: 50px;">AB</div>
+                            <div>
+                                <h4>Alex Brown</h4>
+                                <p style="color: var(--gray-600); font-size: 0.9rem;">Data Scientist at Amazon</p>
+                            </div>
+                        </div>
+                        <p style="margin-bottom: 15px;">Specializes in: Machine Learning, Python, Analytics</p>
+                        <button class="btn-primary">Request Mentorship</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Articles Page -->
+        <div class="page-content" id="articles">
+            <div class="page-header">
+                <h1 class="page-title">Articles</h1>
+                <div class="page-actions">
+                    <button class="btn-secondary">
+                        <i class="fas fa-filter"></i>
+                        Filter by Category
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-grid" id="articlesList">
+                <div class="card">
+                    <div style="margin-bottom: 15px;">
+                        <h3>Breaking into Tech: A Complete Guide</h3>
+                        <p style="color: var(--gray-600); margin: 5px 0;">By John Doe • Published 3 days ago</p>
+                        <div style="margin-top: 10px;">
+                            <span style="background: var(--accent-blue); color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8rem;">Career</span>
+                        </div>
+                    </div>
+                    <p>Everything you need to know about starting your career in technology industry...</p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <button class="btn-primary">Read Article</button>
+                        <button class="btn-secondary">
+                            <i class="fas fa-bookmark"></i>
+                            Save
+                        </button>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.9rem; color: var(--gray-600);">
+                        <i class="fas fa-eye"></i> 156 views • <i class="fas fa-heart"></i> 23 likes
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div style="margin-bottom: 15px;">
+                        <h3>Remote Work Best Practices</h3>
+                        <p style="color: var(--gray-600); margin: 5px 0;">By Sarah Miller • Published 1 week ago</p>
+                        <div style="margin-top: 10px;">
+                            <span style="background: var(--success); color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8rem;">Tips</span>
+                        </div>
+                    </div>
+                    <p>Tips and strategies for being productive while working remotely...</p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <button class="btn-primary">Read Article</button>
+                        <button class="btn-secondary">
+                            <i class="fas fa-bookmark"></i>
+                            Save
+                        </button>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.9rem; color: var(--gray-600);">
+                        <i class="fas fa-eye"></i> 89 views • <i class="fas fa-heart"></i> 15 likes
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div style="margin-bottom: 15px;">
+                        <h3>Machine Learning for Beginners</h3>
+                        <p style="color: var(--gray-600); margin: 5px 0;">By Alex Brown • Published 2 weeks ago</p>
+                        <div style="margin-top: 10px;">
+                            <span style="background: var(--info); color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8rem;">Technical</span>
+                        </div>
+                    </div>
+                    <p>A comprehensive introduction to machine learning concepts and applications...</p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <button class="btn-primary">Read Article</button>
+                        <button class="btn-secondary">
+                            <i class="fas fa-bookmark"></i>
+                            Save
+                        </button>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.9rem; color: var(--gray-600);">
+                        <i class="fas fa-eye"></i> 234 views • <i class="fas fa-heart"></i> 41 likes
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q&A Board Page -->
+        <div class="page-content" id="qa-board">
+            <div class="page-header">
+                <h1 class="page-title">Q&A Board</h1>
+                <div class="page-actions">
+                    <button class="btn-primary" onclick="openModal('questionModal')">
+                        <i class="fas fa-plus"></i>
+                        Ask Question
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Questions</h2>
+                </div>
+
+                <div id="questionsList">
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                            <div>
+                                <h4>How to prepare for technical interviews?</h4>
+                                <p style="color: var(--gray-600); font-size: 0.9rem;">Asked by Alex Chen - 2 days ago</p>
+                            </div>
+                            <span class="status-badge registered">3 Answers</span>
+                        </div>
+                        <p style="margin: 10px 0;">I have interviews coming up at tech companies. What's the best way to prepare for coding interviews and system design questions?</p>
+                        <div style="margin-top: 15px;">
+                            <button class="btn-secondary">View Answers</button>
+                            <span style="margin-left: 15px; color: var(--gray-600); font-size: 0.9rem;">
+                                <i class="fas fa-eye"></i> 45 views
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                            <div>
+                                <h4>Best resources for learning React?</h4>
+                                <p style="color: var(--gray-600); font-size: 0.9rem;">Asked by Sarah Kim - 5 hours ago</p>
+                            </div>
+                            <span style="background: var(--warning); color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem;">Hot</span>
+                        </div>
+                        <p style="margin: 10px 0;">Looking for comprehensive resources to learn React from scratch. Any recommendations for tutorials, courses, or books?</p>
+                        <div style="margin-top: 15px;">
+                            <button class="btn-primary">Answer Question</button>
+                            <span style="margin-left: 15px; color: var(--gray-600); font-size: 0.9rem;">
+                                <i class="fas fa-eye"></i> 23 views
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                            <div>
+                                <h4>Career transition from engineering to product management?</h4>
+                                <p style="color: var(--gray-600); font-size: 0.9rem;">Asked by Mike Johnson - 1 day ago</p>
+                            </div>
+                            <span class="status-badge registered">5 Answers</span>
+                        </div>
+                        <p style="margin: 10px 0;">I'm a software engineer looking to transition into product management. What skills should I develop and how should I approach this transition?</p>
+                        <div style="margin-top: 15px;">
+                            <button class="btn-secondary">View Answers</button>
+                            <span style="margin-left: 15px; color: var(--gray-600); font-size: 0.9rem;">
+                                <i class="fas fa-eye"></i> 67 views
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mentorship Request Modal -->
+    <div class="modal-overlay hidden" id="mentorshipModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Request Mentorship</h2>
+                <button class="modal-close" onclick="closeModal('mentorshipModal')">&times;</button>
+            </div>
+            <form id="mentorshipForm">
+                <div class="form-group">
+                    <label class="form-label">Select Alumni</label>
+                    <select class="form-select" required>
+                        <option value="">Choose an alumni</option>
+                        <option value="john-doe">John Doe - Senior Software Engineer at Google</option>
+                        <option value="sarah-miller">Sarah Miller - Product Manager at Microsoft</option>
+                        <option value="alex-brown">Alex Brown - Data Scientist at Amazon</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mentorship Focus Areas</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <label style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" value="career-guidance"> Career Guidance
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" value="interview-prep"> Interview Preparation
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" value="technical-skills"> Technical Skills
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" value="industry-insights"> Industry Insights
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Your Background</label>
+                    <textarea class="form-textarea"
+                        placeholder="Tell the alumni about your current status, goals, and what you hope to achieve through mentorship..."
+                        required></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn-secondary" onclick="closeModal('mentorshipModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Send Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Question Modal -->
+    <div class="modal-overlay hidden" id="questionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Ask a Question</h2>
+                <button class="modal-close" onclick="closeModal('questionModal')">&times;</button>
+            </div>
+            <form id="questionForm">
+                <div class="form-group">
+                    <label class="form-label">Question Title</label>
+                    <input type="text" class="form-input" placeholder="e.g., How to prepare for technical interviews?"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" required>
+                        <option value="">Select category</option>
+                        <option value="career">Career Advice</option>
+                        <option value="technical">Technical</option>
+                        <option value="interview">Interview Preparation</option>
+                        <option value="industry">Industry Insights</option>
+                        <option value="education">Education & Learning</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Question Details</label>
+                    <textarea class="form-textarea" style="min-height: 150px;"
+                        placeholder="Provide detailed information about your question..." required></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn-secondary" onclick="closeModal('questionModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Post Question</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        class StudentDashboard {
+            constructor() {
+                this.currentPage = 'dashboard';
+                this.apiBaseUrl = '/api'; // Backend API base URL
+                this.user = null;
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.loadUserData();
+                this.loadDashboardData();
+            }
+
+            bindEvents() {
+                // Sidebar navigation
+                document.querySelectorAll('.sidebar-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        const page = item.getAttribute('data-page');
+                        this.navigateToPage(page);
+                    });
+                });
+
+                // Profile dropdown
+                document.getElementById('profileAvatar').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggleProfileDropdown();
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', () => {
+                    this.closeProfileDropdown();
+                });
+
+                // Form submissions
+                document.getElementById('mentorshipForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleMentorshipSubmission(e);
+                });
+
+                document.getElementById('questionForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleQuestionSubmission(e);
+                });
+
+                // Logout
+                document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.logout();
+                });
+
+                // Search functionality
+                document.getElementById('searchBtn').addEventListener('click', () => {
+                    this.performSearch();
+                });
+
+                // Filter functionality
+                ['companyFilter', 'industryFilter', 'experienceFilter', 'courseFilter'].forEach(filterId => {
+                    const element = document.getElementById(filterId);
+                    if (element) {
+                        element.addEventListener('change', () => {
+                            this.applyFilters();
+                        });
+                    }
+                });
+
+                // Global click handler for closing modals
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('modal-overlay')) {
+                        this.closeAllModals();
+                    }
+                });
+            }
+
+            // User Data Management
+            async loadUserData() {
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/students/profile`, {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        const userData = await response.json();
+                        this.user = userData;
+                        this.updateUserUI(userData);
+                    }
+                } catch (error) {
+                    console.log('Using dummy data for demo');
+                    this.user = {
+                        firstName: 'Student',
+                        lastName: 'User',
+                        email: 'student.user@example.com'
+                    };
+                    this.updateUserUI(this.user);
+                }
+            }
+
+            loadDashboardData() {
+                // Update stats with demo data
+                document.getElementById('mentorshipCount').textContent = '3';
+                document.getElementById('eventsCount').textContent = '8';
+                document.getElementById('questionsCount').textContent = '12';
+            }
+
+            // Navigation and UI Management
+            navigateToPage(page) {
+                // Hide all pages
+                document.querySelectorAll('.page-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                // Show selected page
+                document.getElementById(page).classList.add('active');
+
+                // Update sidebar active state
+                document.querySelectorAll('.sidebar-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                document.querySelector(`[data-page="${page}"]`).classList.add('active');
+
+                this.currentPage = page;
+                this.loadPageData(page);
+            }
+
+            loadPageData(page) {
+                switch (page) {
+                    case 'alumni-network':
+                        this.loadAlumniNetwork();
+                        break;
+                    case 'events':
+                        this.loadEvents();
+                        break;
+                    case 'mentorship':
+                        this.loadMentorship();
+                        break;
+                    case 'articles':
+                        this.loadArticles();
+                        break;
+                    case 'qa-board':
+                        this.loadQABoard();
+                        break;
+                }
+            }
+
+            // API Integration Methods
+            async loadAlumniNetwork() {
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/alumni/network`, {
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                    });
+
+                    if (response.ok) {
+                        const alumni = await response.json();
+                        this.renderAlumniNetwork(alumni);
+                    }
+                } catch (error) {
+                    console.log('Using dummy alumni data');
+                }
+            }
+
+            async loadEvents() {
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/events/available`, {
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                    });
+
+                    if (response.ok) {
+                        const events = await response.json();
+                        this.renderEvents(events);
+                    }
+                } catch (error) {
+                    console.log('Using dummy events data');
+                }
+            }
+
+            async loadMentorship() {
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/students/mentorship`, {
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                    });
+
+                    if (response.ok) {
+                        const mentorship = await response.json();
+                        this.renderMentorship(mentorship);
+                    }
+                } catch (error) {
+                    console.log('Using dummy mentorship data');
+                }
+            }
+
+            async loadArticles() {
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/articles`, {
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                    });
+
+                    if (response.ok) {
+                        const articles = await response.json();
+                        this.renderArticles(articles);
+                    }
+                } catch (error) {
+                    console.log('Using dummy articles data');
+                }
+            }
+
+            async loadQABoard() {
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/qa/questions`, {
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                    });
+
+                    if (response.ok) {
+                        const questions = await response.json();
+                        this.renderQuestions(questions);
+                    }
+                } catch (error) {
+                    console.log('Using dummy Q&A data');
+                }
+            }
+
+            // Form submission handlers
+            async handleMentorshipSubmission(e) {
+                const formData = new FormData(e.target);
+                const mentorshipData = {
+                    alumniId: formData.get('alumni'),
+                    focusAreas: Array.from(e.target.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value),
+                    background: formData.get('background')
+                };
+
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/mentorship/request`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(mentorshipData)
+                    });
+
+                    if (response.ok) {
+                        this.showSuccess('Mentorship request sent successfully!');
+                        this.closeModal('mentorshipModal');
+                        this.loadMentorship();
+                    }
+                } catch (error) {
+                    this.showSuccess('Mentorship request sent! (Demo mode)');
+                    this.closeModal('mentorshipModal');
+                }
+            }
+
+            async handleQuestionSubmission(e) {
+                const formData = new FormData(e.target);
+                const questionData = {
+                    title: e.target.querySelector('input[type="text"]').value,
+                    category: e.target.querySelector('select').value,
+                    content: e.target.querySelector('textarea').value
+                };
+
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/qa/questions`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(questionData)
+                    });
+
+                    if (response.ok) {
+                        this.showSuccess('Question posted successfully!');
+                        this.closeModal('questionModal');
+                        this.loadQABoard();
+                    }
+                } catch (error) {
+                    this.showSuccess('Question posted! (Demo mode)');
+                    this.closeModal('questionModal');
+                }
+            }
+
+            // Utility methods
+            updateUserUI(userData) {
+                if (userData) {
+                    const initials = `${userData.firstName?.charAt(0) || ''}${userData.lastName?.charAt(0) || ''}`;
+                    document.getElementById('avatarInitials').textContent = initials;
+                    document.getElementById('dropdownName').textContent = `${userData.firstName} ${userData.lastName}`;
+                    document.getElementById('dropdownEmail').textContent = userData.email;
+                }
+            }
+
+            performSearch() {
+                const query = document.getElementById('globalSearch').value.trim();
+                if (!query) return;
+
+                console.log('Searching for:', query);
+                this.showSuccess(`Search functionality will be implemented for: "${query}"`);
+            }
+
+            applyFilters() {
+                const filters = {
+                    company: document.getElementById('companyFilter')?.value,
+                    industry: document.getElementById('industryFilter')?.value,
+                    experience: document.getElementById('experienceFilter')?.value,
+                    course: document.getElementById('courseFilter')?.value
+                };
+
+                console.log('Applying filters:', filters);
+                this.showSuccess('Filters applied!');
+            }
+
+            toggleProfileDropdown() {
+                const dropdown = document.getElementById('profileDropdown');
+                dropdown.classList.toggle('show');
+            }
+
+            closeProfileDropdown() {
+                const dropdown = document.getElementById('profileDropdown');
+                dropdown.classList.remove('show');
+            }
+
+            showSuccess(message) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: var(--success);
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: var(--radius-md);
+                    z-index: 2000;
+                    box-shadow: var(--shadow-lg);
+                    font-weight: 500;
+                `;
+                notification.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-check-circle"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 5000);
+            }
+
+            closeModal(modalId) {
+                document.getElementById(modalId).classList.add('hidden');
+            }
+
+            closeAllModals() {
+                document.querySelectorAll('.modal-overlay').forEach(modal => {
+                    modal.classList.add('hidden');
+                });
+            }
+
+            logout() {
+                if (confirm('Are you sure you want to logout?')) {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userRole');
+                    localStorage.removeItem('userId');
+                    window.location.href = './login.html';
+                }
+            }
+        }
+
+        // Global functions
+        function navigateToPage(page) {
+            if (window.studentDashboard) {
+                window.studentDashboard.navigateToPage(page);
+            }
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Initialize dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.studentDashboard = new StudentDashboard();
+        });
+    </script>
+</body>
+
+</html>
